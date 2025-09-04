@@ -1,314 +1,1188 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Premium Sports Web Player</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Sports Web Player</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root{
-      --bg:#0c0c0f;--panel:#121218;--panel-2:#181826;--panel-3:#1f1f2e;
-      --text:#f5f6f9;--muted:#9aa0ad;--brand:#ff3348;--ok:#17c964;--warn:#f5a524;
-      --fc:#ff6b00;--sl:#00a8ff;--ch:#ffcc00;
-      --radius:14px;--shadow:0 10px 30px rgba(0,0,0,.35)
+    :root {
+      --primary: #e10600;
+      --secondary: #1e78c7;
+      --dark-bg: #121212;
+      --card-bg: #1e1e1e;
+      --card-hover: #2a2a2a;
+      --text-primary: #ffffff;
+      --text-secondary: #b3b3b3;
+      --accent: #ff4d4d;
+      --live-indicator: #e10600;
+      --upcoming-indicator: #1e78c7;
+      --fancode-color: #ff6b00;
+      --sonyliv-color: #00a8ff;
+      --header-height: 70px;
+      --tab-height: 60px;
+      --border-radius: 16px;
+      --telegram-color: #0088cc;
+      --success: #00c853;
+      --gradient-primary: linear-gradient(135deg, var(--primary), #ff4d4d);
+      --gradient-secondary: linear-gradient(135deg, var(--secondary), #4d94ff);
     }
-    *{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#0b0b10,#0c0c0f 120px);color:var(--text);font:14px/1.45 system-ui,Segoe UI,Roboto,Helvetica,Arial}
-    header{position:sticky;top:0;z-index:40;background:linear-gradient(90deg,#0d0d14,#13131b);border-bottom:1px solid #1c1c29}
-    .nav{max-width:1200px;margin:0 auto;height:64px;display:flex;align-items:center;gap:12px;padding:0 16px}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:700}
-    .brand i{color:var(--brand)}
-    .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:var(--panel-2);color:var(--muted);cursor:pointer;border:1px solid #23233a}
-    .chip.active{color:var(--text);background:var(--panel-3);border-color:#32324a}
-    .spacer{flex:1}
-    .search{display:flex;align-items:center;gap:8px;background:#141422;border:1px solid #23233a;border-radius:999px;padding:8px 12px;min-width:260px}
-    .search input{all:unset;color:var(--text);width:220px}
-    .toolbar{max-width:1200px;margin:10px auto 0;display:flex;gap:8px;padding:0 16px;flex-wrap:wrap}
-    .btn{background:#181828;border:1px solid #23233a;color:#dfe2ea;border-radius:10px;padding:8px 12px;cursor:pointer}
-    .btn.active{border-color:var(--brand);color:#fff}
-    .btn.ghost{background:transparent}
-    .grid{max-width:1200px;margin:14px auto;padding:0 16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
-    .card{background:var(--panel);border:1px solid #23233a;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:transform .18s ease, border-color .2s}
-    .card:hover{transform:translateY(-2px);border-color:#3a3a5a}
-    .thumb{position:relative;height:168px;background:#141421}
-    .thumb img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .3s ease}
-    .thumb img.loaded{opacity:1}
-    .badge{position:absolute;top:10px;left:10px;padding:6px 9px;border-radius:999px;font-size:12px;font-weight:700}
-    .live{background:linear-gradient(90deg,#ff3348,#ff006a);color:#fff}
-    .upc{background:#1c3bff;color:#fff}
-    .flag{position:absolute;top:10px;right:10px;padding:6px 9px;border-radius:999px;font-size:12px;font-weight:700}
-    .flag.fc{background:linear-gradient(90deg,#ff7a00,#ff6b00);color:#111}
-    .flag.sl{background:linear-gradient(90deg,#00a8ff,#4ecbff);color:#081018}
-    .flag.ch{background:linear-gradient(90deg,#ffcc00,#ffdd66);color:#111}
-    .body{padding:12px}
-    .title{font-weight:700;margin:2px 0 6px}
-    .muted{color:var(--muted);font-size:13px}
-    .row{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
-    .pill{background:#1a1a2a;border:1px solid #26263d;padding:4px 8px;border-radius:999px;font-size:12px;color:#bfc3d2}
-    .empty{grid-column:1/-1;background:var(--panel);border:1px dashed #2a2a45;border-radius:var(--radius);padding:28px;text-align:center;color:var(--muted)}
-    footer.note{max-width:1200px;margin:8px auto 24px;color:#7f8796;padding:0 16px}
-    /* player */
-    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.86);backdrop-filter:saturate(110%) blur(4px);display:none;align-items:center;justify-content:center;z-index:50}
-    .player{width:min(92vw,980px);background:#0f0f17;border:1px solid #2b2b44;border-radius:16px;box-shadow:var(--shadow);padding:14px}
-    .player-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-    .player-head .title{flex:1}
-    .player video{width:100%;border-radius:10px;background:#000}
-    .player .meta{margin-top:10px;color:#aab1bf;font-size:13px}
-    .player .actions{display:flex;gap:8px;margin-left:auto}
-    .ghost-link{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border-radius:10px;border:1px dashed #2a93ff33;color:#9bd2ff;background:#0b2338}
-    @media (max-width:560px){.grid{grid-template-columns:1fr}}
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--dark-bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    /* Society Header */
+    .society-header {
+      background: linear-gradient(135deg, #000000, #2a2a2a);
+      text-align: center;
+      padding: 12px 0;
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      border-bottom: 1px solid #333;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .society-header::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-primary);
+    }
+    
+    /* Telegram Banner */
+    .telegram-banner {
+      background: linear-gradient(135deg, var(--telegram-color), #005580);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 0.95rem;
+      position: relative;
+    }
+    
+    .telegram-banner a {
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 24px;
+      background: rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    
+    .telegram-banner a:hover {
+      background: rgba(0, 0, 0, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 136, 204, 0.3);
+    }
+    
+    /* Header Styles */
+    header {
+      background: linear-gradient(to right, #0a0a0a, #222);
+      padding: 0 24px;
+      height: var(--header-height);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid #2a2a2a;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+    
+    .logo-icon {
+      color: var(--primary);
+      font-size: 2rem;
+    }
+    
+    .search-container {
+      display: flex;
+      align-items: center;
+      background: #2a2a2a;
+      border-radius: 24px;
+      padding: 8px 18px;
+      width: 340px;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+    
+    .search-container:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(225, 6, 0, 0.2);
+    }
+    
+    .search-container input {
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      padding: 8px;
+      width: 100%;
+      outline: none;
+      font-size: 1rem;
+    }
+    
+    .search-container i {
+      color: var(--text-secondary);
+    }
+    
+    /* Tabs Styles */
+    .tabs-container {
+      background: #1a1a1a;
+      position: sticky;
+      top: var(--header-height);
+      z-index: 90;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid #2a2a2a;
+    }
+    
+    .tabs {
+      display: flex;
+      justify-content: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .tabs button {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      padding: 18px 30px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      position: relative;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .tabs button.active {
+      color: var(--text-primary);
+    }
+    
+    .tabs button.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--gradient-primary);
+      border-radius: 4px 4px 0 0;
+    }
+    
+    .tabs button:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    /* Filters */
+    .filters-container {
+      background: #222;
+      padding: 16px 0;
+      border-bottom: 1px solid #2a2a2a;
+    }
+    
+    .filters {
+      display: flex;
+      justify-content: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0 16px;
+    }
+    
+    .filters button {
+      background: #333;
+      border: none;
+      color: var(--text-secondary);
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border-radius: 24px;
+      transition: all 0.3s ease;
+    }
+    
+    .filters button.active {
+      background: var(--gradient-primary);
+      color: white;
+      box-shadow: 0 4px 12px rgba(225, 6, 0, 0.3);
+    }
+    
+    .filters button:hover {
+      background: #444;
+      transform: translateY(-2px);
+    }
+    
+    /* Main Content */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    
+    .section-title {
+      margin: 24px 0 20px;
+      font-size: 1.6rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+    }
+    
+    .section-title i {
+      color: var(--primary);
+      font-size: 1.4rem;
+    }
+    
+    /* Matches Grid */
+    .matches {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+      margin-top: 20px;
+    }
+    
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      border: 1px solid #2a2a2a;
+      position: relative;
+    }
+    
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+      background: var(--card-hover);
+      border-color: #333;
+    }
+    
+    .card-thumb {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+    }
+    
+    .card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    
+    .card:hover .card-thumb img {
+      transform: scale(1.08);
+    }
+    
+    .card-badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      z-index: 2;
+    }
+    
+    .badge-live {
+      background: var(--live-indicator);
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(225, 6, 0, 0.4);
+    }
+    
+    .badge-upcoming {
+      background: var(--upcoming-indicator);
+      color: white;
+      box-shadow: 0 4px 12px rgba(30, 120, 199, 0.4);
+    }
+    
+    .provider-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      z-index: 2;
+    }
+    
+    .badge-fancode {
+      background: var(--fancode-color);
+      color: white;
+      box-shadow: 0 4px 12px rgba(255, 107, 0, 0.4);
+    }
+    
+    .badge-sonyliv {
+      background: var(--sonyliv-color);
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 168, 255, 0.4);
+    }
+    
+    .card-content {
+      padding: 20px;
+    }
+    
+    .card-title {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+    
+    .card-details {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .card-teams {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 16px 0;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 12px;
+      border-radius: 8px;
+    }
+    
+    .card-time {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    
+    /* Player Section */
+    #player {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.98);
+      z-index: 1000;
+      padding: 24px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .player-header {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .player-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    
+    .close-player {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    
+    .close-player:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: rotate(90deg);
+    }
+    
+    .video-container {
+      width: 100%;
+      max-width: 1000px;
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+    
+    video {
+      width: 100%;
+      background: black;
+    }
+    
+    .player-info {
+      width: 100%;
+      max-width: 1000px;
+      margin-top: 20px;
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      text-align: center;
+    }
+    
+    /* Loading Animation */
+    .loader {
+      display: flex;
+      justify-content: center;
+      padding: 60px;
+    }
+    
+    .loader-dots {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .loader-dots div {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--primary);
+      animation: loader 1.2s infinite ease-in-out both;
+    }
+    
+    .loader-dots div:nth-child(1) { animation-delay: -0.32s; }
+    .loader-dots div:nth-child(2) { animation-delay: -0.16s; }
+    
+    @keyframes loader {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
+    }
+    
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--text-secondary);
+    }
+    
+    .empty-state i {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+    
+    .empty-state p {
+      font-size: 1.2rem;
+      margin-bottom: 16px;
+    }
+    
+    .empty-state button {
+      background: var(--gradient-primary);
+      border: none;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .empty-state button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(225, 6, 0, 0.4);
+    }
+    
+    /* Notification Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--success);
+      color: white;
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 200, 83, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.5s ease;
+    }
+    
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 900px) {
+      .matches {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      }
+    }
+    
+    @media (max-width: 768px) {
+      header {
+        padding: 0 20px;
+      }
+      
+      .search-container {
+        width: 240px;
+      }
+      
+      .logo {
+        font-size: 1.3rem;
+      }
+      
+      .logo-icon {
+        font-size: 1.6rem;
+      }
+      
+      .society-header {
+        font-size: 1.5rem;
+        padding: 10px 0;
+      }
+      
+      .telegram-banner {
+        font-size: 0.9rem;
+        padding: 10px 16px;
+      }
+      
+      .tabs button {
+        padding: 16px 20px;
+        font-size: 0.95rem;
+      }
+      
+      .container {
+        padding: 20px;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .tabs button {
+        padding: 14px 16px;
+        font-size: 0.9rem;
+      }
+      
+      .search-container {
+        display: none;
+      }
+      
+      .container {
+        padding: 16px;
+      }
+      
+      .matches {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .filters {
+        justify-content: flex-start;
+        padding: 0 16px;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 8px;
+        scrollbar-width: none;
+      }
+      
+      .filters::-webkit-scrollbar {
+        display: none;
+      }
+      
+      .society-header {
+        font-size: 1.3rem;
+      }
+      
+      .telegram-banner {
+        font-size: 0.85rem;
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+      }
+      
+      .card-thumb {
+        height: 180px;
+      }
+      
+      .section-title {
+        font-size: 1.4rem;
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Society Header -->
+  <div class="society-header">
+    Sports Society
+  </div>
+  
+  <!-- Telegram Banner -->
+  <div class="telegram-banner">
+    <span>Join our Telegram channel for live updates</span>
+    <a href="https://t.me/sportssociety" target="_blank">
+      <i class="fab fa-telegram"></i>
+      @sportssociety
+    </a>
+  </div>
+
   <header>
-    <div class="nav">
-      <div class="brand"><i class="fa-solid fa-play-circle"></i> <span>Premium Sports Player</span></div>
-      <button class="chip active" id="src-all"><i class="fa-solid fa-layer-group"></i> All</button>
-      <button class="chip" id="src-fc"><i class="fa-solid fa-tv"></i> FanCode</button>
-      <button class="chip" id="src-sl"><i class="fa-solid fa-broadcast-tower"></i> SonyLIV</button>
-      <button class="chip" id="src-ch"><i class="fa-solid fa-cricket"></i> CricHd</button>
-      <div class="spacer"></div>
-      <div class="search"><i class="fa-solid fa-magnifying-glass"></i><input id="q" placeholder="Search teams, leagues, events…" /></div>
+    <div class="logo">
+      <i class="fas fa-play-circle logo-icon"></i>
+      <span>Web Player</span>
+    </div>
+    <div class="search-container">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Search matches..." id="search-input">
     </div>
   </header>
 
-  <div class="toolbar">
-    <button class="btn active" id="tab-live"><i class="fa-solid fa-circle-dot"></i> Live</button>
-    <button class="btn" id="tab-upc"><i class="fa-regular fa-clock"></i> Upcoming</button>
-
-    <button class="btn ghost" data-sport="all">All Sports</button>
-    <button class="btn" data-sport="Cricket">Cricket</button>
-    <button class="btn" data-sport="Football">Football</button>
-    <button class="btn" data-sport="Basketball">Basketball</button>
-    <button class="btn" data-sport="Tennis">Tennis</button>
-    <button class="btn" data-sport="Hockey">Hockey</button>
-
-    <div class="spacer"></div>
-    <button class="btn ghost" id="refresh-now" title="R key also refreshes"><i class="fa-solid fa-rotate"></i> Refresh</button>
-    <span class="muted" id="last-updated"></span>
-  </div>
-
-  <main class="grid" id="grid">
-    <div class="empty" id="placeholder">loading matches…</div>
-  </main>
-
-  <footer class="note">tips: <kbd>/</kbd> to focus search • <kbd>R</kbd> to refresh • your filters auto-save</footer>
-
-  <div class="overlay" id="overlay">
-    <div class="player">
-      <div class="player-head">
-        <div class="title" id="play-title">Loading…</div>
-        <div class="actions" id="player-actions"></div>
-        <button class="btn" id="close"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <video id="video" controls playsinline></video>
-      <div class="meta" id="play-meta"></div>
+  <div class="tabs-container">
+    <div class="tabs">
+      <button id="tab-fancode" class="active">
+        <i class="fas fa-tv"></i> FanCode
+      </button>
+      <button id="tab-sonyliv">
+        <i class="fas fa-broadcast-tower"></i> SonyLIV
+      </button>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.8"></script>
+  <div class="filters-container">
+    <div class="filters">
+      <button data-filter="all" class="active">All</button>
+      <button data-filter="Cricket">Cricket</button>
+      <button data-filter="Football">Football</button>
+      <button data-filter="Basketball">Basketball</button>
+      <button data-filter="Tennis">Tennis</button>
+      <button data-filter="Hockey">Hockey</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Live Matches Section -->
+    <h2 class="section-title" id="live-section-title">
+      <i class="fas fa-circle" style="color: var(--live-indicator);"></i>
+      Live Matches
+    </h2>
+    
+    <div id="live-matches" class="matches">
+      <div class="loader">
+        <div class="loader-dots">
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upcoming Matches Section -->
+    <h2 class="section-title" id="upcoming-section-title">
+      <i class="far fa-clock" style="color: var(--upcoming-indicator);"></i>
+      Upcoming Matches
+    </h2>
+    
+    <div id="upcoming-matches" class="matches">
+      <div class="loader">
+        <div class="loader-dots">
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="player">
+    <div class="player-header">
+      <h2 class="player-title" id="match-title"></h2>
+      <button class="close-player">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="video-container">
+      <video id="live-player" controls autoplay></video>
+    </div>
+    
+    <div class="player-info">
+      <p id="match-info"></p>
+    </div>
+  </div>
+
+  <div class="toast" id="refresh-toast">
+    <i class="fas fa-sync-alt"></i>
+    <span>Content refreshed successfully</span>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script>
-    // ---------- CONFIG ----------
-    const API_FC = "https://raw.githubusercontent.com/drmlive/fancode-live-events/main/fancode.json";
-    const API_SL = "https://raw.githubusercontent.com/drmlive/sliv-live-events/refs/heads/main/sonyliv.json";
-    const API_CH = "https://raw.githubusercontent.com/abusaeeidx/CricHd-playlists-Auto-Update-permanent/main/api.json";
-    const PAGE_SIZE = 18;
-    const REFRESH_BASE_MS = 60_000;
+    // Define API endpoints
+    const API_FANCODE = "https://raw.githubusercontent.com/drmlive/fancode-live-events/main/fancode.json";
+    const API_SONYLIV = "https://raw.githubusercontent.com/drmlive/sliv-live-events/refs/heads/main/sonyliv.json";
 
-    const state = {
-      dataset: [],
-      filtered: [],
-      sliceEnd: PAGE_SIZE,
-      source: loadPref("source","all"),
-      status: loadPref("status","live"),
-      sport : loadPref("sport","all"),
-      q: loadPref("q",""),
-      backoff: 0,
-      hls: null
-    };
+    // Get DOM elements
+    const liveMatchesDiv = document.getElementById("live-matches");
+    const upcomingMatchesDiv = document.getElementById("upcoming-matches");
+    const playerSection = document.getElementById("player");
+    const searchInput = document.getElementById("search-input");
+    const tabFanCode = document.getElementById("tab-fancode");
+    const tabSonyLIV = document.getElementById("tab-sonyliv");
+    const filterButtons = document.querySelectorAll(".filters button");
+    const liveSectionTitle = document.getElementById("live-section-title");
+    const upcomingSectionTitle = document.getElementById("upcoming-section-title");
+    const refreshToast = document.getElementById("refresh-toast");
 
-    const grid = document.getElementById("grid");
-    const placeholder = document.getElementById("placeholder");
-    const q = document.getElementById("q");
-    const lastUpdated = document.getElementById("last-updated");
-    const overlay = document.getElementById("overlay");
-    const videoEl = document.getElementById("video");
-    const playTitle = document.getElementById("play-title");
-    const playMeta = document.getElementById("play-meta");
-    const playerActions = document.getElementById("player-actions");
+    // Initialize variables
+    let fancodeMatches = [];
+    let sonylivMatches = [];
+    let currentSource = "fancode";
+    let currentFilter = "all";
+    let filteredLiveMatches = [];
+    let filteredUpcomingMatches = [];
+    let videoPlayer = null;
+    let hls = null;
 
-    document.getElementById("src-all").onclick = () => setSource("all");
-    document.getElementById("src-fc").onclick  = () => setSource("fc");
-    document.getElementById("src-sl").onclick  = () => setSource("sl");
-    document.getElementById("src-ch").onclick  = () => setSource("ch");
-    document.getElementById("tab-live").onclick = () => setStatus("live");
-    document.getElementById("tab-upc").onclick  = () => setStatus("upc");
-    document.getElementById("refresh-now").onclick = refreshNow;
-    document.getElementById("close").onclick = closePlayer;
-    q.oninput = () => { state.q = q.value.trim(); savePref("q",state.q); applyFilters(); };
+    // Initialize the application
+    function initApp() {
+      setupEventListeners();
+      loadMatches();
+    }
 
-    document.querySelectorAll('.toolbar .btn[data-sport]').forEach(btn=>{
-      btn.onclick = () => {
-        document.querySelectorAll('.toolbar .btn[data-sport]').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        state.sport = btn.dataset.sport;
-        savePref("sport",state.sport);
+    // Set up all event listeners
+    function setupEventListeners() {
+      // Tab switching
+      tabFanCode.addEventListener("click", () => switchSource("fancode"));
+      tabSonyLIV.addEventListener("click", () => switchSource("sonyliv"));
+      
+      // Filters
+      filterButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          currentFilter = btn.dataset.filter;
+          document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          applyFilters();
+        });
+      });
+      
+      // Search functionality
+      searchInput.addEventListener("input", applyFilters);
+      
+      // Close player button
+      document.querySelector(".close-player").addEventListener("click", closePlayer);
+      
+      // Close player when clicking outside video (on overlay)
+      playerSection.addEventListener("click", (e) => {
+        if (e.target === playerSection) {
+          closePlayer();
+        }
+      });
+      
+      // Pull-to-refresh simulation (on mobile)
+      let touchStartY = 0;
+      window.addEventListener('touchstart', e => {
+        touchStartY = e.touches[0].clientY;
+      }, {passive: true});
+      
+      window.addEventListener('touchend', e => {
+        const touchEndY = e.changedTouches[0].clientY;
+        // If user swiped down from top of screen
+        if (touchStartY - touchEndY > 100 && window.scrollY === 0) {
+          loadMatches();
+          showToast();
+        }
+      }, {passive: true});
+    }
+
+    // Show notification toast
+    function showToast() {
+      refreshToast.classList.add('show');
+      setTimeout(() => {
+        refreshToast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Switch between FanCode and SonyLIV sources
+    function switchSource(source) {
+      currentSource = source;
+      
+      // Update active tab
+      if (source === "fancode") {
+        tabFanCode.classList.add("active");
+        tabSonyLIV.classList.remove("active");
+      } else {
+        tabSonyLIV.classList.add("active");
+        tabFanCode.classList.remove("active");
+      }
+      
+      applyFilters();
+    }
+
+    // Load matches from APIs
+    async function loadMatches() {
+      try {
+        showLoader();
+        
+        // Try to load FanCode data
+        try {
+          const fRes = await fetch(API_FANCODE);
+          if (fRes.ok) {
+            const fData = await fRes.json();
+            fancodeMatches = (fData.matches || []).map(m => ({ ...m, provider: "FanCode" }));
+          }
+        } catch (e) {
+          console.error("Failed to load FanCode data:", e);
+          fancodeMatches = [];
+        }
+        
+        // Try to load SonyLIV data
+        try {
+          const sRes = await fetch(API_SONYLIV);
+          if (sRes.ok) {
+            const sData = await sRes.json();
+            // Fix for SonyLIV: Ensure both live and upcoming events are included
+            sonylivMatches = (sData.matches || []).map(m => ({ 
+              ...m, 
+              provider: "SonyLIV",
+              // Ensure status is properly set for SonyLIV events
+              status: m.status || (m.isLive ? "LIVE" : "UPCOMING")
+            }));
+          }
+        } catch (e) {
+          console.error("Failed to load SonyLIV data:", e);
+          sonylivMatches = [];
+        }
+        
         applyFilters();
-      };
-      if(btn.dataset.sport === state.sport) btn.classList.add('active');
-    });
-
-    initActives();
-
-    window.addEventListener('keydown', (e)=>{
-      if(e.key==='/'){ e.preventDefault(); q.focus(); q.select(); }
-      if(e.key.toLowerCase()==='r'){ refreshNow(); }
-      if(e.key==='Escape' && overlay.style.display==='flex'){ closePlayer(); }
-    });
-
-    const imgObserver = new IntersectionObserver(entries=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          const img = entry.target;
-          img.src = img.dataset.src;
-          img.onload = ()=>img.classList.add('loaded');
-          imgObserver.unobserve(img);
-        }
-      });
-    },{rootMargin:"200px 0px"});
-
-    window.addEventListener('scroll', ()=>{
-      if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 300){
-        if(state.sliceEnd < state.filtered.length){
-          state.sliceEnd += PAGE_SIZE;
-          render();
-        }
-      }
-    });
-
-    let refreshTimer;
-    function scheduleRefresh(){
-      clearTimeout(refreshTimer);
-      const delay = REFRESH_BASE_MS * Math.max(1, state.backoff || 1);
-      refreshTimer = setTimeout(loadAll, delay);
-    }
-
-    async function loadAll(){
-      placeholder.textContent = "loading matches…";
-      try{
-        const [fcRes, slRes, chRes] = await Promise.allSettled([
-          fetch(API_FC, {cache:"no-store"}),
-          fetch(API_SL, {cache:"no-store"}),
-          fetch(API_CH, {cache:"no-store"})
-        ]);
-
-        const fc = fcRes.status==="fulfilled" && fcRes.value.ok ? (await fcRes.value.json()).matches ?? [] : [];
-        const sl = slRes.status==="fulfilled" && slRes.value.ok ? (await slRes.value.json()).matches ?? [] : [];
-        const ch = chRes.status==="fulfilled" && chRes.value.ok ? (await chRes.value.json()).matches ?? [] : [];
-
-        const normFC = fc.map(m=>({provider:"FanCode", providerKey:"fc", title:m.match_name||m.title||m.event_name||"Untitled", category:m.event_category||"Sports", league:m.event_name||"", teams:(m.team_1&&m.team_2)?`${m.team_1} vs ${m.team_2}`:"", start:m.startTime||"", status:(m.status||"").toUpperCase()==="LIVE"?"LIVE":"UPCOMING", img:m.src||"", hls:m.adfree_url||m.dai_url||"", raw:m}));
-        const normSL = sl.map(m=>({provider:"SonyLIV", providerKey:"sl", title:m.match_name||m.event_name||"Untitled", category:m.event_category||"Sports", league:m.event_name||"", teams:"", start:m.startTime||"", status:m.isLive?"LIVE":"UPCOMING", img:m.src||"", hls:m.dai_url||m.pub_url||m.video_url||"", contentId:m.contentId, broadcast:m.broadcast_channel||"", audio:m.audioLanguageName||"", raw:m}));
-        const normCH = ch.map(m=>({provider:"CricHd", providerKey:"ch", title:m.match_name||m.title||m.event_name||"Untitled", category:m.event_category||"Cricket", league:m.event_name||"", teams:(m.team_1&&m.team_2)?`${m.team_1} vs ${m.team_2}`:"", start:m.startTime||"", status:m.isLive?"LIVE":"UPCOMING", img:m.src||"", hls:m.hls_url||m.stream_url||"", raw:m}));
-
-        const unified = [...normFC, ...normSL, ...normCH];
-
-        state.backoff = 0;
-        updateLastUpdated();
-        scheduleRefresh();
-        state.dataset = filterBySource(unified, state.source);
-        applyFilters(true);
-      }catch(err){
-        console.error(err);
-        state.backoff = Math.min((state.backoff||1)*2, 8);
-        placeholder.textContent = "failed to load. will retry…";
-        scheduleRefresh();
+      } catch (err) {
+        showError("Failed to load matches. Please try again later.");
       }
     }
 
-    function updateLastUpdated(){
-      const d = new Date();
-      lastUpdated.textContent = `updated ${d.toLocaleTimeString()}`;
-    }
-
-    function filterBySource(list, src){
-      if(src==="fc") return list.filter(x=>x.providerKey==="fc");
-      if(src==="sl") return list.filter(x=>x.providerKey==="sl");
-      if(src==="ch") return list.filter(x=>x.providerKey==="ch");
-      return list;
-    }
-
-    function applyFilters(resetSlice=false){
-      let arr = [...state.dataset];
-      arr = arr.filter(x => state.status==="live" ? x.status==="LIVE" : x.status!=="LIVE");
-      if(state.sport!=="all"){ arr = arr.filter(x => (x.category||"").toLowerCase() === state.sport.toLowerCase()); }
-      const qv = state.q.toLowerCase();
-      if(qv){ arr = arr.filter(x => (x.title+""+x.teams).toLowerCase().includes(qv)); }
-      state.filtered = arr;
-      if(resetSlice) state.sliceEnd = PAGE_SIZE;
-      render();
-    }
-
-    function render(){
-      grid.innerHTML="";
-      const slice = state.filtered.slice(0,state.sliceEnd);
-      if(slice.length===0){ placeholder.textContent="no matches found"; grid.appendChild(placeholder); return; }
-      slice.forEach(m=>{
-        const c=document.createElement("div"); c.className="card";
-        c.innerHTML=`<div class="thumb"><img data-src="${m.img}" alt="${m.title}"><span class="badge ${m.status==="LIVE"?"live":"upc"}">${m.status}</span></div>
-        <div class="body"><div class="title">${m.title}</div><div class="muted">${m.teams||m.league||m.category}</div></div>`;
-        c.onclick = ()=>playMatch(m);
-        grid.appendChild(c);
-        imgObserver.observe(c.querySelector("img"));
+    // Apply filters and search
+    function applyFilters() {
+      let data = currentSource === "fancode" ? [...fancodeMatches] : [...sonylivMatches];
+      
+      // Apply sport filter
+      if (currentFilter !== "all") {
+        data = data.filter(m => m.event_category && 
+          m.event_category.toLowerCase() === currentFilter.toLowerCase());
+      }
+      
+      // Apply search filter
+      const searchTerm = searchInput.value.toLowerCase();
+      if (searchTerm) {
+        data = data.filter(match => 
+          (match.match_name && match.match_name.toLowerCase().includes(searchTerm)) ||
+          (match.event_name && match.event_name.toLowerCase().includes(searchTerm)) ||
+          (match.team_1 && match.team_1.toLowerCase().includes(searchTerm)) ||
+          (match.team_2 && match.team_2.toLowerCase().includes(searchTerm))
+        );
+      }
+      
+      // Separate live and upcoming matches
+      filteredLiveMatches = data.filter(match => {
+        const isLive = match.status ? match.status.toUpperCase() === "LIVE" : match.isLive;
+        return isLive;
       });
+      
+      filteredUpcomingMatches = data.filter(match => {
+        const isLive = match.status ? match.status.toUpperCase() === "LIVE" : match.isLive;
+        return !isLive;
+      });
+      
+      renderMatches();
     }
 
-    function playMatch(m){
-      overlay.style.display="flex";
-      playTitle.textContent = m.title;
-      playMeta.textContent = `${m.teams||m.league||m.category} | ${m.provider}`;
-      playerActions.innerHTML=`<a class="ghost-link" href="${m.hls}" target="_blank">Open in new tab</a>`;
-      if(Hls.isSupported()){
-        if(state.hls){ state.hls.destroy(); }
-        state.hls = new Hls();
-        state.hls.loadSource(m.hls);
-        state.hls.attachMedia(videoEl);
-        state.hls.on(Hls.Events.MANIFEST_PARSED,()=>{ videoEl.play(); });
-      } else { videoEl.src = m.hls; videoEl.play(); }
+    // Render matches to the UI
+    function renderMatches() {
+      liveMatchesDiv.innerHTML = "";
+      upcomingMatchesDiv.innerHTML = "";
+      
+      // Update section titles with count
+      liveSectionTitle.innerHTML = `<i class="fas fa-circle" style="color: var(--live-indicator);"></i> Live Matches ${filteredLiveMatches.length > 0 ? `(${filteredLiveMatches.length})` : ''}`;
+      upcomingSectionTitle.innerHTML = `<i class="far fa-clock" style="color: var(--upcoming-indicator);"></i> Upcoming Matches ${filteredUpcomingMatches.length > 0 ? `(${filteredUpcomingMatches.length})` : ''}`;
+      
+      // Render live matches
+      if (filteredLiveMatches.length === 0) {
+        liveMatchesDiv.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-tv"></i>
+            <p>No ${currentFilter === "all" ? "" : currentFilter + " "}live matches available.</p>
+          </div>
+        `;
+      } else {
+        filteredLiveMatches.forEach(match => {
+          renderMatchCard(match, liveMatchesDiv);
+        });
+      }
+      
+      // Render upcoming matches
+      if (filteredUpcomingMatches.length === 0) {
+        upcomingMatchesDiv.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-clock"></i>
+            <p>No ${currentFilter === "all" ? "" : currentFilter + " "}upcoming matches available.</p>
+          </div>
+        `;
+      } else {
+        filteredUpcomingMatches.forEach(match => {
+          renderMatchCard(match, upcomingMatchesDiv);
+        });
+      }
     }
 
-    function closePlayer(){
-      overlay.style.display="none";
-      if(state.hls){ state.hls.destroy(); state.hls=null; }
-      videoEl.pause(); videoEl.src="";
+    // Render a single match card
+    function renderMatchCard(match, container) {
+      const isLive = match.status ? match.status.toUpperCase() === "LIVE" : match.isLive;
+      const providerClass = match.provider === "FanCode" ? "badge-fancode" : "badge-sonyliv";
+      
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="card-thumb">
+          <img src="${match.src || 'https://via.placeholder.com/300x180/1e1e1e/666666?text=Sports+Event'}" 
+               alt="${match.match_name || match.event_name || 'Sports Event'}"
+               onerror="this.src='https://via.placeholder.com/300x180/1e1e1e/666666?text=Sports+Event'">
+          <div class="card-badge ${isLive ? 'badge-live' : 'badge-upcoming'}">
+            ${isLive ? '<i class="fas fa-circle"></i> LIVE' : 'UPCOMING'}
+          </div>
+          <div class="provider-badge ${providerClass}">
+            ${match.provider}
+          </div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">${match.match_name || match.event_name || "Untitled Event"}</h3>
+          <p class="card-details">${match.event_category || "Sports"} • ${match.event_name || ""}</p>
+          ${match.team_1 && match.team_2 ? `
+          <div class="card-teams">
+            <span>${match.team_1}</span>
+            <span>VS</span>
+            <span>${match.team_2}</span>
+          </div>
+          ` : ''}
+          <p class="card-time">
+            <i class="far fa-clock"></i> ${match.startTime || "Time TBD"}
+          </p>
+        </div>
+      `;
+      card.addEventListener("click", () => playMatch(match));
+      container.appendChild(card);
     }
 
-    function refreshNow(){ loadAll(); }
+    // Play a selected match
+    function playMatch(match) {
+      const matchTitleEl = document.getElementById("match-title");
+      const matchInfoEl = document.getElementById("match-info");
+      const videoEl = document.getElementById("live-player");
+      
+      matchTitleEl.textContent = match.match_name || match.event_name || "Live Event";
+      
+      if (match.team_1 && match.team_2) {
+        matchInfoEl.textContent = `${match.team_1} vs ${match.team_2} • ${match.event_name || ""}`;
+      } else {
+        matchInfoEl.textContent = match.event_name || "";
+      }
+      
+      playerSection.style.display = "flex";
+      document.body.style.overflow = "hidden";
 
-    function setSource(src){
-      state.source = src;
-      savePref("source",src);
-      document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-      document.getElementById("src-"+src).classList.add('active');
-      state.dataset = filterBySource([...state.dataset], src);
-      applyFilters(true);
+      const streamUrl = match.adfree_url || match.dai_url || null;
+      
+      if (!streamUrl && match.provider === "SonyLIV") {
+        showSonyLIVMessage();
+        return;
+      }
+
+      if (streamUrl) {
+        setupVideoPlayer(streamUrl, videoEl);
+      }
     }
 
-    function setStatus(status){
-      state.status = status;
-      savePref("status",status);
-      document.querySelectorAll('#tab-live,#tab-upc').forEach(b=>b.classList.remove('active'));
-      document.getElementById("tab-"+status).classList.add('active');
-      applyFilters(true);
+    // Set up the video player with HLS.js
+    function setupVideoPlayer(streamUrl, videoEl) {
+      // Clean up any existing Hls instance
+      if (hls) {
+        hls.destroy();
+      }
+      
+      if (Hls.isSupported()) {
+        hls = new Hls({
+          maxBufferLength: 30,
+          maxMaxBufferLength: 60,
+          enableWorker: true
+        });
+        hls.loadSource(streamUrl);
+        hls.attachMedia(videoEl);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          videoEl.play().catch(e => console.log("Autoplay prevented:", e));
+        });
+      } else if (videoEl.canPlayType("application/vnd.apple.mpegurl")) {
+        videoEl.src = streamUrl;
+        videoEl.addEventListener("loadedmetadata", () => {
+          videoEl.play().catch(e => console.log("Autoplay prevented:", e));
+        });
+      }
     }
 
-    function loadPref(k,d){ try{return localStorage.getItem(k)||d}catch(e){return d} }
-    function savePref(k,v){ try{localStorage.setItem(k,v)}catch(e){} }
-
-    function initActives(){
-      document.getElementById("src-"+state.source)?.classList.add("active");
-      document.getElementById("tab-"+state.status)?.classList.add("active");
+    // Show SonyLIV message when content is not directly accessible
+    function showSonyLIVMessage() {
+      playerSection.innerHTML = `
+        <div class="player-header">
+          <h2 class="player-title">SonyLIV Content</h2>
+          <button class="close-player">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div style="text-align: center; padding: 40px; max-width: 500px;">
+          <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #00a8ff; margin-bottom: 20px;"></i>
+          <h3>SonyLIV streams require official app/website access</h3>
+          <p>Please use the official SonyLIV app or website to watch this content.</p>
+        </div>
+      `;
+      
+      document.querySelector(".close-player").addEventListener("click", closePlayer);
     }
 
-    loadAll();
+    // Close the player
+    function closePlayer() {
+      // Stop any ongoing playback
+      const videoEl = document.getElementById("live-player");
+      if (videoEl) {
+        videoEl.pause();
+        videoEl.src = "";
+      }
+      
+      // Destroy Hls instance if it exists
+      if (hls) {
+        hls.destroy();
+        hls = null;
+      }
+      
+      // Hide player
+      playerSection.style.display = "none";
+      document.body.style.overflow = "auto";
+      
+      // Reset player to initial state if it was modified
+      if (!document.getElementById("match-title")) {
+        playerSection.innerHTML = `
+          <div class="player-header">
+            <h2 class="player-title" id="match-title"></h2>
+            <button class="close-player">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="video-container">
+            <video id="live-player" controls autoplay></video>
+          </div>
+          <div class="player-info">
+            <p id="match-info"></p>
+          </div>
+        `;
+        
+        // Reattach event listener to the new close button
+        document.querySelector(".close-player").addEventListener("click", closePlayer);
+      }
+    }
+
+    // Show loading indicator
+    function showLoader() {
+      liveMatchesDiv.innerHTML = `
+        <div class="loader">
+          <div class="loader-dots">
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+      `;
+      
+      upcomingMatchesDiv.innerHTML = `
+        <div class="loader">
+          <div class="loader-dots">
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Show error message
+    function showError(message) {
+      liveMatchesDiv.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-exclamation-triangle"></i>
+          <p>${message}</p>
+          <button onclick="loadMatches()">Try Again</button>
+        </div>
+      `;
+      
+      upcomingMatchesDiv.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-exclamation-triangle"></i>
+          <p>${message}</p>
+          <button onclick="loadMatches()">Try Again</button>
+        </div>
+      `;
+    }
+
+    // Initialize the application when the DOM is fully loaded
+    document.addEventListener("DOMContentLoaded", initApp);
+    
+    // Auto-refresh every 60 seconds
+    setInterval(() => {
+      loadMatches();
+      showToast();
+    }, 60000);
   </script>
 </body>
 </html>
