@@ -62,7 +62,6 @@
   <header>
     <div class="nav">
       <div class="brand"><i class="fa-solid fa-play-circle"></i> <span>Premium Sports Player</span></div>
-      <!-- source chips -->
       <button class="chip active" id="src-all"><i class="fa-solid fa-layer-group"></i> All</button>
       <button class="chip" id="src-fc"><i class="fa-solid fa-tv"></i> FanCode</button>
       <button class="chip" id="src-sl"><i class="fa-solid fa-broadcast-tower"></i> SonyLIV</button>
@@ -89,13 +88,11 @@
   </div>
 
   <main class="grid" id="grid">
-    <!-- cards injected here -->
     <div class="empty" id="placeholder">loading matches…</div>
   </main>
 
   <footer class="note">tips: <kbd>/</kbd> to focus search • <kbd>R</kbd> to refresh • your filters auto-save</footer>
 
-  <!-- Player Overlay -->
   <div class="overlay" id="overlay">
     <div class="player">
       <div class="player-head">
@@ -114,24 +111,21 @@
     const API_FC = "https://raw.githubusercontent.com/drmlive/fancode-live-events/main/fancode.json";
     const API_SL = "https://raw.githubusercontent.com/drmlive/sliv-live-events/refs/heads/main/sonyliv.json";
     const API_CH = "https://raw.githubusercontent.com/abusaeeidx/CricHd-playlists-Auto-Update-permanent/main/api.json";
-    const PAGE_SIZE = 18;            // how many cards to render per "page" (virtualization)
-    const REFRESH_BASE_MS = 60_000;  // base auto refresh
-    // ----------------------------
+    const PAGE_SIZE = 18;
+    const REFRESH_BASE_MS = 60_000;
 
-    // state
     const state = {
-      dataset: [],        // unified array (after filtering by source)
-      filtered: [],       // after sport/search/status
+      dataset: [],
+      filtered: [],
       sliceEnd: PAGE_SIZE,
-      source: loadPref("source","all"), // all | fc | sl | ch
-      status: loadPref("status","live"), // live | upc
+      source: loadPref("source","all"),
+      status: loadPref("status","live"),
       sport : loadPref("sport","all"),
       q: loadPref("q",""),
-      backoff: 0,         // retry backoff multiplier
+      backoff: 0,
       hls: null
     };
 
-    // elements
     const grid = document.getElementById("grid");
     const placeholder = document.getElementById("placeholder");
     const q = document.getElementById("q");
@@ -142,7 +136,6 @@
     const playMeta = document.getElementById("play-meta");
     const playerActions = document.getElementById("player-actions");
 
-    // bind UI
     document.getElementById("src-all").onclick = () => setSource("all");
     document.getElementById("src-fc").onclick  = () => setSource("fc");
     document.getElementById("src-sl").onclick  = () => setSource("sl");
@@ -153,7 +146,6 @@
     document.getElementById("close").onclick = closePlayer;
     q.oninput = () => { state.q = q.value.trim(); savePref("q",state.q); applyFilters(); };
 
-    // sport filter buttons
     document.querySelectorAll('.toolbar .btn[data-sport]').forEach(btn=>{
       btn.onclick = () => {
         document.querySelectorAll('.toolbar .btn[data-sport]').forEach(b=>b.classList.remove('active'));
@@ -165,17 +157,14 @@
       if(btn.dataset.sport === state.sport) btn.classList.add('active');
     });
 
-    // initialize active chips/tabs by state
     initActives();
 
-    // keyboard shortcuts
     window.addEventListener('keydown', (e)=>{
       if(e.key==='/'){ e.preventDefault(); q.focus(); q.select(); }
       if(e.key.toLowerCase()==='r'){ refreshNow(); }
       if(e.key==='Escape' && overlay.style.display==='flex'){ closePlayer(); }
     });
 
-    // lazy image loader
     const imgObserver = new IntersectionObserver(entries=>{
       entries.forEach(entry=>{
         if(entry.isIntersecting){
@@ -187,7 +176,6 @@
       });
     },{rootMargin:"200px 0px"});
 
-    // infinite scroll
     window.addEventListener('scroll', ()=>{
       if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 300){
         if(state.sliceEnd < state.filtered.length){
@@ -197,7 +185,6 @@
       }
     });
 
-    // auto refresh with backoff
     let refreshTimer;
     function scheduleRefresh(){
       clearTimeout(refreshTimer);
@@ -205,7 +192,6 @@
       refreshTimer = setTimeout(loadAll, delay);
     }
 
-    // load & unify data
     async function loadAll(){
       placeholder.textContent = "loading matches…";
       try{
@@ -219,64 +205,20 @@
         const sl = slRes.status==="fulfilled" && slRes.value.ok ? (await slRes.value.json()).matches ?? [] : [];
         const ch = chRes.status==="fulfilled" && chRes.value.ok ? (await chRes.value.json()).matches ?? [] : [];
 
-        // tag provider + normalize
-        const normFC = fc.map(m=>({
-          provider:"FanCode",
-          providerKey:"fc",
-          title:m.match_name || m.title || m.event_name || "Untitled",
-          category:m.event_category || "Sports",
-          league:m.event_name || "",
-          teams: (m.team_1 && m.team_2) ? `${m.team_1} vs ${m.team_2}` : "",
-          start:m.startTime || "",
-          status:(m.status||"").toUpperCase()==="LIVE" ? "LIVE" : "UPCOMING",
-          img:m.src || "",
-          hls:m.adfree_url || m.dai_url || "",
-          raw:m
-        }));
-
-        const normSL = sl.map(m=>({
-          provider:"SonyLIV",
-          providerKey:"sl",
-          title:m.match_name || m.event_name || "Untitled",
-          category:m.event_category || "Sports",
-          league:m.event_name || "",
-          teams: "", // sony json usually lacks team_1/team_2
-          start:m.startTime || "",
-          status: m.isLive ? "LIVE" : "UPCOMING",
-          img:m.src || "",
-          hls:m.dai_url || m.pub_url || m.video_url || "", // FIX: Use available stream URLs
-          contentId: m.contentId,
-          broadcast: m.broadcast_channel || "",
-          audio: m.audioLanguageName || "",
-          raw:m
-        }));
-
-        const normCH = ch.map(m=>({
-          provider:"CricHd",
-          providerKey:"ch",
-          title:m.match_name || m.title || m.event_name || "Untitled",
-          category:m.event_category || "Cricket",
-          league:m.event_name || "",
-          teams: (m.team_1 && m.team_2) ? `${m.team_1} vs ${m.team_2}` : "",
-          start:m.startTime || "",
-          status: m.isLive ? "LIVE" : "UPCOMING",
-          img:m.src || "",
-          hls:m.hls_url || m.stream_url || "",
-          raw:m
-        }));
+        const normFC = fc.map(m=>({provider:"FanCode", providerKey:"fc", title:m.match_name||m.title||m.event_name||"Untitled", category:m.event_category||"Sports", league:m.event_name||"", teams:(m.team_1&&m.team_2)?`${m.team_1} vs ${m.team_2}`:"", start:m.startTime||"", status:(m.status||"").toUpperCase()==="LIVE"?"LIVE":"UPCOMING", img:m.src||"", hls:m.adfree_url||m.dai_url||"", raw:m}));
+        const normSL = sl.map(m=>({provider:"SonyLIV", providerKey:"sl", title:m.match_name||m.event_name||"Untitled", category:m.event_category||"Sports", league:m.event_name||"", teams:"", start:m.startTime||"", status:m.isLive?"LIVE":"UPCOMING", img:m.src||"", hls:m.dai_url||m.pub_url||m.video_url||"", contentId:m.contentId, broadcast:m.broadcast_channel||"", audio:m.audioLanguageName||"", raw:m}));
+        const normCH = ch.map(m=>({provider:"CricHd", providerKey:"ch", title:m.match_name||m.title||m.event_name||"Untitled", category:m.event_category||"Cricket", league:m.event_name||"", teams:(m.team_1&&m.team_2)?`${m.team_1} vs ${m.team_2}`:"", start:m.startTime||"", status:m.isLive?"LIVE":"UPCOMING", img:m.src||"", hls:m.hls_url||m.stream_url||"", raw:m}));
 
         const unified = [...normFC, ...normSL, ...normCH];
 
         state.backoff = 0;
         updateLastUpdated();
         scheduleRefresh();
-
-        // set dataset by current source
         state.dataset = filterBySource(unified, state.source);
         applyFilters(true);
       }catch(err){
         console.error(err);
-        state.backoff = Math.min((state.backoff||1)*2, 8); // exponential (max x8)
+        state.backoff = Math.min((state.backoff||1)*2, 8);
         placeholder.textContent = "failed to load. will retry…";
         scheduleRefresh();
       }
@@ -287,244 +229,86 @@
       lastUpdated.textContent = `updated ${d.toLocaleTimeString()}`;
     }
 
-    // filtering
     function filterBySource(list, src){
       if(src==="fc") return list.filter(x=>x.providerKey==="fc");
       if(src==="sl") return list.filter(x=>x.providerKey==="sl");
       if(src==="ch") return list.filter(x=>x.providerKey==="ch");
       return list;
     }
+
     function applyFilters(resetSlice=false){
       let arr = [...state.dataset];
-
-      // status
       arr = arr.filter(x => state.status==="live" ? x.status==="LIVE" : x.status!=="LIVE");
-
-      // sport
-      if(state.sport!=="all"){
-        arr = arr.filter(x => (x.category||"").toLowerCase() === state.sport.toLowerCase());
-      }
-
-      // search
-      const qv = (state.q||"").toLowerCase();
-      if(qv){
-        arr = arr.filter(x =>
-          x.title.toLowerCase().includes(qv) ||
-          (x.teams||"").toLowerCase().includes(qv) ||
-          (x.league||"").toLowerCase().includes(qv) ||
-          (x.category||"").toLowerCase().includes(qv)
-        );
-      }
-
-      // sort: live first then by start text
-      arr.sort((a,b)=>{
-        if(a.status!==b.status) return a.status==="LIVE" ? -1 : 1;
-        return (a.start||"").localeCompare(b.start||"");
-      });
-
+      if(state.sport!=="all"){ arr = arr.filter(x => (x.category||"").toLowerCase() === state.sport.toLowerCase()); }
+      const qv = state.q.toLowerCase();
+      if(qv){ arr = arr.filter(x => (x.title+""+x.teams).toLowerCase().includes(qv)); }
       state.filtered = arr;
       if(resetSlice) state.sliceEnd = PAGE_SIZE;
       render();
     }
 
-    // rendering
     function render(){
-      grid.innerHTML = "";
-      if(state.filtered.length===0){
-        const div = document.createElement('div');
-        div.className="empty";
-        div.textContent = "no matches for current filters.";
-        grid.appendChild(div);
-        return;
-      }
-      const slice = state.filtered.slice(0, state.sliceEnd);
-      slice.forEach(item => grid.appendChild(card(item)));
-
-      // if more pending, append sentinel info
-      if(state.sliceEnd < state.filtered.length){
-        const more = document.createElement('div');
-        more.className = "empty";
-        more.textContent = "scroll for more…";
-        grid.appendChild(more);
-      }
+      grid.innerHTML="";
+      const slice = state.filtered.slice(0,state.sliceEnd);
+      if(slice.length===0){ placeholder.textContent="no matches found"; grid.appendChild(placeholder); return; }
+      slice.forEach(m=>{
+        const c=document.createElement("div"); c.className="card";
+        c.innerHTML=`<div class="thumb"><img data-src="${m.img}" alt="${m.title}"><span class="badge ${m.status==="LIVE"?"live":"upc"}">${m.status}</span></div>
+        <div class="body"><div class="title">${m.title}</div><div class="muted">${m.teams||m.league||m.category}</div></div>`;
+        c.onclick = ()=>playMatch(m);
+        grid.appendChild(c);
+        imgObserver.observe(c.querySelector("img"));
+      });
     }
 
-    function card(m){
-      const el = document.createElement('article');
-      el.className = "card";
-      el.innerHTML = `
-        <div class="thumb">
-          <img data-src="${escapeHtml(m.img || 'https://via.placeholder.com/1280x720?text=Sports')}" alt="">
-          <span class="badge ${m.status==='LIVE'?'live':'upc'}">${m.status==='LIVE'?'LIVE':'UPCOMING'}</span>
-          <span class="flag ${m.providerKey}">${m.provider}</span>
-        </div>
-        <div class="body">
-          <div class="title">${escapeHtml(m.title)}</div>
-          <div class="muted">${escapeHtml(m.category)} ${m.league?`• ${escapeHtml(m.league)}`:''}</div>
-          ${m.teams?`<div class="row"><span class="pill">${escapeHtml(m.teams)}</span></div>`:''}
-          <div class="row">
-            <span class="muted"><i class="fa-regular fa-clock"></i> ${escapeHtml(m.start || 'TBD')}</span>
-            <button class="btn" data-action="watch"><i class="fa-solid fa-play"></i> Watch</button>
-          </div>
-        </div>
-      `;
-      // lazy image
-      const img = el.querySelector('img');
-      imgObserver.observe(img);
-
-      // click handlers
-      el.querySelector('[data-action="watch"]').onclick = (e)=>{ e.stopPropagation(); play(m); };
-      el.onclick = ()=> play(m);
-      return el;
-    }
-
-    // player
-    function play(m){
-      overlay.style.display = "flex";
+    function playMatch(m){
+      overlay.style.display="flex";
       playTitle.textContent = m.title;
-      playMeta.textContent = `${m.category}${m.league?` • ${m.league}`:''}${m.teams?` • ${m.teams}`:''}${m.start?` • ${m.start}`:''}`;
-
-      playerActions.innerHTML = "";
-
-      // cleanup previous
-      if(state.hls){ state.hls.destroy(); state.hls = null; }
-      videoEl.pause(); videoEl.removeAttribute('src'); videoEl.load();
-
-      if((m.providerKey==='fc' || m.providerKey==='ch') && m.hls){
-        // HLS playback for FanCode and CricHd
-        if(Hls.isSupported()){
-          const hls = new Hls({maxBufferLength:30,maxMaxBufferLength:60,enableWorker:true,lowLatencyMode:true});
-          hls.loadSource(m.hls);
-          hls.attachMedia(videoEl);
-          hls.on(Hls.Events.MANIFEST_PARSED, ()=> videoEl.play().catch(()=>{}));
-          hls.on(Hls.Events.ERROR,(evt,data)=>{
-            console.warn('hls error', data);
-          });
-          state.hls = hls;
-        }else if(videoEl.canPlayType("application/vnd.apple.mpegurl")){
-          videoEl.src = m.hls;
-          videoEl.addEventListener("loadedmetadata", ()=> videoEl.play().catch(()=>{}), {once:true});
-        }else{
-          fallbackMessage("HLS is not supported in this browser.");
-        }
-      }else if(m.providerKey==='sl'){
-        // SonyLIV playback - use the available stream URLs
-        const streamUrl = m.hls; // This now contains dai_url, pub_url, or video_url
-        
-        if(streamUrl){
-          if(Hls.isSupported()){
-            const hls = new Hls({
-              maxBufferLength:30,
-              maxMaxBufferLength:60,
-              enableWorker:true,
-              lowLatencyMode:true
-            });
-            
-            hls.loadSource(streamUrl);
-            hls.attachMedia(videoEl);
-            hls.on(Hls.Events.MANIFEST_PARSED, ()=> {
-              videoEl.play().catch(e => {
-                console.error("Playback error:", e);
-                fallbackMessage("Playback failed. The stream might be DRM-protected.");
-              });
-            });
-            
-            hls.on(Hls.Events.ERROR, (evt, data)=>{
-              console.warn('SonyLIV HLS error', data);
-              if(data.fatal){
-                switch(data.type){
-                  case Hls.ErrorTypes.NETWORK_ERROR:
-                    fallbackMessage("Network error - trying to reconnect...");
-                    hls.startLoad();
-                    break;
-                  case Hls.ErrorTypes.MEDIA_ERROR:
-                    hls.recoverMediaError();
-                    break;
-                  default:
-                    fallbackMessage("Unable to play SonyLIV stream");
-                    break;
-                }
-              }
-            });
-            
-            state.hls = hls;
-          }else if(videoEl.canPlayType("application/vnd.apple.mpegurl")){
-            videoEl.src = streamUrl;
-            videoEl.addEventListener("loadedmetadata", ()=> {
-              videoEl.play().catch(e => {
-                console.error("Playback error:", e);
-                fallbackMessage("Playback failed. The stream might be DRM-protected.");
-              });
-            }, {once:true});
-          }else{
-            fallbackMessage("HLS is not supported in this browser.");
-          }
-        }else{
-          fallbackMessage("Stream URL not available for this SonyLIV content.");
-          // Add link to official SonyLIV website
-          const a = document.createElement('a');
-          a.className = "ghost-link";
-          a.target = "_blank";
-          a.rel = "noopener";
-          a.href = "https://www.sonyliv.com/";
-          a.innerHTML = `<i class="fa-solid fa-arrow-up-right-from-square"></i> Open SonyLIV${m.contentId?` (ID: ${m.contentId})`:''}`;
-          playerActions.appendChild(a);
-        }
-      }else{
-        fallbackMessage("Stream URL not available.");
-      }
-    }
-
-    function fallbackMessage(msg){
-      videoEl.poster = "";
-      playMeta.innerHTML += ` • <span style="color:#9bd2ff">${escapeHtml(msg)}</span>`;
+      playMeta.textContent = `${m.teams||m.league||m.category} | ${m.provider}`;
+      playerActions.innerHTML=`<a class="ghost-link" href="${m.hls}" target="_blank">Open in new tab</a>`;
+      if(Hls.isSupported()){
+        if(state.hls){ state.hls.destroy(); }
+        state.hls = new Hls();
+        state.hls.loadSource(m.hls);
+        state.hls.attachMedia(videoEl);
+        state.hls.on(Hls.Events.MANIFEST_PARSED,()=>{ videoEl.play(); });
+      } else { videoEl.src = m.hls; videoEl.play(); }
     }
 
     function closePlayer(){
-      overlay.style.display = "none";
-      if(state.hls){ state.hls.destroy(); state.hls = null; }
-      videoEl.pause(); videoEl.removeAttribute('src'); videoEl.load();
+      overlay.style.display="none";
+      if(state.hls){ state.hls.destroy(); state.hls=null; }
+      videoEl.pause(); videoEl.src="";
     }
 
-    // helpers
+    function refreshNow(){ loadAll(); }
+
     function setSource(src){
-      state.source = src; savePref("source",src);
-      document.getElementById("src-all").classList.toggle("active", src==="all");
-      document.getElementById("src-fc").classList.toggle("active", src==="fc");
-      document.getElementById("src-sl").classList.toggle("active", src==="sl");
-      document.getElementById("src-ch").classList.toggle("active", src==="ch");
-      // update dataset with current unified list
-      state.dataset = filterBySource([...state.filtered, ...state.dataset], src);
-      refreshNow();
-    }
-    function setStatus(s){
-      state.status = s; savePref("status",s);
-      document.getElementById("tab-live").classList.toggle("active", s==="live");
-      document.getElementById("tab-upc").classList.toggle("active", s==="upc");
+      state.source = src;
+      savePref("source",src);
+      document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+      document.getElementById("src-"+src).classList.add('active');
+      state.dataset = filterBySource([...state.dataset], src);
       applyFilters(true);
     }
+
+    function setStatus(status){
+      state.status = status;
+      savePref("status",status);
+      document.querySelectorAll('#tab-live,#tab-upc').forEach(b=>b.classList.remove('active'));
+      document.getElementById("tab-"+status).classList.add('active');
+      applyFilters(true);
+    }
+
+    function loadPref(k,d){ try{return localStorage.getItem(k)||d}catch(e){return d} }
+    function savePref(k,v){ try{localStorage.setItem(k,v)}catch(e){} }
+
     function initActives(){
-      document.getElementById("src-all").classList.toggle("active", state.source==="all");
-      document.getElementById("src-fc").classList.toggle("active", state.source==="fc");
-      document.getElementById("src-sl").classList.toggle("active", state.source==="sl");
-      document.getElementById("src-ch").classList.toggle("active", state.source==="ch");
-      document.getElementById("tab-live").classList.toggle("active", state.status==="live");
-      document.getElementById("tab-upc").classList.toggle("active", state.status==="upc");
-      q.value = state.q;
+      document.getElementById("src-"+state.source)?.classList.add("active");
+      document.getElementById("tab-"+state.status)?.classList.add("active");
     }
 
-    function refreshNow(){
-      // keep user filters, just re-fetch
-      loadAll();
-    }
-
-    function savePref(k,v){ try{ localStorage.setItem("psp_"+k, v); }catch{} }
-    function loadPref(k,def){ try{ return localStorage.getItem("psp_"+k) ?? def; }catch{ return def } }
-    function escapeHtml(s){ return String(s||"").replace(/[&<>"]/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c])) }
-
-    // boot
     loadAll();
-    scheduleRefresh();
   </script>
 </body>
 </html>
