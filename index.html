@@ -19,13 +19,11 @@
       --upcoming-indicator: #1e78c7;
       --fancode-color: #ff6b00;
       --sonyliv-color: #00a8ff;
-      --header-height: 70px;
-      --tab-height: 60px;
-      --border-radius: 16px;
+      --header-height: 60px;
+      --tab-height: 50px;
+      --border-radius: 12px;
       --telegram-color: #0088cc;
-      --success: #00c853;
-      --gradient-primary: linear-gradient(135deg, var(--primary), #ff4d4d);
-      --gradient-secondary: linear-gradient(135deg, var(--secondary), #4d94ff);
+      --success: #4caf50;
     }
     
     * {
@@ -42,102 +40,40 @@
       overflow-x: hidden;
     }
     
-    /* Society Header */
-    .society-header {
-      background: linear-gradient(135deg, #000000, #2a2a2a);
-      text-align: center;
-      padding: 12px 0;
-      font-size: 1.8rem;
-      font-weight: 800;
-      letter-spacing: 1px;
-      border-bottom: 1px solid #333;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .society-header::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: var(--gradient-primary);
-    }
-    
-    /* Telegram Banner */
-    .telegram-banner {
-      background: linear-gradient(135deg, var(--telegram-color), #005580);
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      font-size: 0.95rem;
-      position: relative;
-    }
-    
-    .telegram-banner a {
-      color: white;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
-      border-radius: 24px;
-      background: rgba(0, 0, 0, 0.2);
-      transition: all 0.3s ease;
-      font-weight: 500;
-    }
-    
-    .telegram-banner a:hover {
-      background: rgba(0, 0, 0, 0.4);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 136, 204, 0.3);
-    }
-    
     /* Header Styles */
     header {
       background: linear-gradient(to right, #0a0a0a, #222);
-      padding: 0 24px;
+      padding: 0 20px;
       height: var(--header-height);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
       position: sticky;
       top: 0;
       z-index: 100;
-      border-bottom: 1px solid #2a2a2a;
     }
     
     .logo {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-weight: 700;
-      font-size: 1.5rem;
+      gap: 10px;
+      font-weight: bold;
+      font-size: 1.4rem;
     }
     
     .logo-icon {
       color: var(--primary);
-      font-size: 2rem;
+      font-size: 1.8rem;
     }
     
     .search-container {
       display: flex;
       align-items: center;
       background: #2a2a2a;
-      border-radius: 24px;
-      padding: 8px 18px;
-      width: 340px;
-      transition: all 0.3s ease;
-      border: 1px solid transparent;
-    }
-    
-    .search-container:focus-within {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(225, 6, 0, 0.2);
+      border-radius: 20px;
+      padding: 5px 15px;
+      width: 300px;
     }
     
     .search-container input {
@@ -147,7 +83,6 @@
       padding: 8px;
       width: 100%;
       outline: none;
-      font-size: 1rem;
     }
     
     .search-container i {
@@ -160,8 +95,7 @@
       position: sticky;
       top: var(--header-height);
       z-index: 90;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-      border-bottom: 1px solid #2a2a2a;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
     
     .tabs {
@@ -175,15 +109,15 @@
       background: none;
       border: none;
       color: var(--text-secondary);
-      padding: 18px 30px;
+      padding: 15px 25px;
       cursor: pointer;
       font-size: 1rem;
-      font-weight: 600;
+      font-weight: 500;
       position: relative;
       transition: all 0.3s ease;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
     
     .tabs button.active {
@@ -196,21 +130,19 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 4px;
-      background: var(--gradient-primary);
-      border-radius: 4px 4px 0 0;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 3px 3px 0 0;
     }
     
     .tabs button:hover {
       color: var(--text-primary);
-      background: rgba(255, 255, 255, 0.05);
     }
     
     /* Filters */
     .filters-container {
       background: #222;
-      padding: 16px 0;
-      border-bottom: 1px solid #2a2a2a;
+      padding: 10px 0;
     }
     
     .filters {
@@ -219,60 +151,54 @@
       max-width: 1200px;
       margin: 0 auto;
       flex-wrap: wrap;
-      gap: 8px;
-      padding: 0 16px;
+      gap: 5px;
     }
     
     .filters button {
       background: #333;
       border: none;
       color: var(--text-secondary);
-      padding: 10px 20px;
+      padding: 8px 16px;
       cursor: pointer;
       font-size: 0.9rem;
-      font-weight: 500;
-      border-radius: 24px;
+      border-radius: 20px;
       transition: all 0.3s ease;
     }
     
     .filters button.active {
-      background: var(--gradient-primary);
+      background: var(--primary);
       color: white;
-      box-shadow: 0 4px 12px rgba(225, 6, 0, 0.3);
     }
     
     .filters button:hover {
       background: #444;
-      transform: translateY(-2px);
     }
     
     /* Main Content */
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 24px;
+      padding: 20px;
     }
     
     .section-title {
-      margin: 24px 0 20px;
-      font-size: 1.6rem;
+      margin: 20px 0 15px;
+      font-size: 1.4rem;
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-weight: 700;
+      gap: 10px;
     }
     
     .section-title i {
       color: var(--primary);
-      font-size: 1.4rem;
     }
     
     /* Matches Grid */
     .matches {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 24px;
-      margin-top: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 15px;
     }
     
     .card {
@@ -281,22 +207,20 @@
       overflow: hidden;
       cursor: pointer;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-      border: 1px solid #2a2a2a;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       position: relative;
     }
     
     .card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
       background: var(--card-hover);
-      border-color: #333;
     }
     
     .card-thumb {
       position: relative;
       width: 100%;
-      height: 200px;
+      height: 180px;
       overflow: hidden;
     }
     
@@ -308,20 +232,18 @@
     }
     
     .card:hover .card-thumb img {
-      transform: scale(1.08);
+      transform: scale(1.05);
     }
     
     .card-badge {
       position: absolute;
-      top: 16px;
-      left: 16px;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: 700;
+      top: 12px;
+      left: 12px;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: bold;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      z-index: 2;
     }
     
     .badge-live {
@@ -329,77 +251,103 @@
       color: white;
       display: flex;
       align-items: center;
-      gap: 6px;
-      box-shadow: 0 4px 12px rgba(225, 6, 0, 0.4);
+      gap: 5px;
     }
     
     .badge-upcoming {
       background: var(--upcoming-indicator);
       color: white;
-      box-shadow: 0 4px 12px rgba(30, 120, 199, 0.4);
+    }
+    
+    .badge-completed {
+      background: var(--success);
+      color: white;
     }
     
     .provider-badge {
       position: absolute;
-      top: 16px;
-      right: 16px;
-      padding: 5px 10px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      z-index: 2;
+      top: 12px;
+      right: 12px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: bold;
     }
     
     .badge-fancode {
       background: var(--fancode-color);
       color: white;
-      box-shadow: 0 4px 12px rgba(255, 107, 0, 0.4);
     }
     
     .badge-sonyliv {
       background: var(--sonyliv-color);
       color: white;
-      box-shadow: 0 4px 12px rgba(0, 168, 255, 0.4);
     }
     
     .card-content {
-      padding: 20px;
+      padding: 15px;
     }
     
     .card-title {
-      font-size: 1.2rem;
-      margin-bottom: 10px;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
       font-weight: 600;
-      line-height: 1.4;
+      line-height: 1.3;
     }
     
     .card-details {
       color: var(--text-secondary);
-      font-size: 0.95rem;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
     }
     
     .card-teams {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin: 16px 0;
-      font-weight: 600;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 12px;
-      border-radius: 8px;
+      margin: 12px 0;
+      font-weight: 500;
     }
     
     .card-time {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--text-secondary);
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-top: 12px;
+      gap: 5px;
+    }
+    
+    .card-score {
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      margin-top: 5px;
+      font-weight: 500;
+    }
+    
+    /* Event type tabs */
+    .event-tabs {
+      display: flex;
+      margin: 20px 0;
+      background: #1a1a1a;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .event-tab {
+      flex: 1;
+      text-align: center;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    
+    .event-tab.active {
+      background: var(--primary);
+    }
+    
+    .event-tab:hover:not(.active) {
+      background: #2a2a2a;
     }
     
     /* Player Section */
@@ -410,9 +358,9 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.98);
+      background: rgba(0, 0, 0, 0.95);
       z-index: 1000;
-      padding: 24px;
+      padding: 20px;
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -420,77 +368,114 @@
     
     .player-header {
       width: 100%;
-      max-width: 1000px;
+      max-width: 900px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
     
     .player-title {
-      font-size: 1.5rem;
-      font-weight: 600;
+      font-size: 1.3rem;
     }
     
     .close-player {
-      background: rgba(255, 255, 255, 0.1);
+      background: none;
       border: none;
       color: var(--text-primary);
       font-size: 1.5rem;
       cursor: pointer;
-      padding: 8px;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-    }
-    
-    .close-player:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: rotate(90deg);
+      padding: 5px;
     }
     
     .video-container {
       width: 100%;
-      max-width: 1000px;
+      max-width: 900px;
       position: relative;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
     
     video {
       width: 100%;
+      border-radius: 8px;
       background: black;
     }
     
     .player-info {
       width: 100%;
-      max-width: 1000px;
-      margin-top: 20px;
+      max-width: 900px;
+      margin-top: 15px;
       color: var(--text-secondary);
-      font-size: 1.1rem;
+    }
+    
+    /* SonyLIV Solutions */
+    .sonyliv-solutions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    .solution-card {
+      background: #2a2a2a;
+      border-radius: var(--border-radius);
+      padding: 20px;
       text-align: center;
+      transition: all 0.3s ease;
+    }
+    
+    .solution-card:hover {
+      transform: translateY(-5px);
+      background: #333;
+    }
+    
+    .solution-card i {
+      font-size: 2.5rem;
+      color: var(--sonyliv-color);
+      margin-bottom: 15px;
+    }
+    
+    .solution-card h3 {
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+    
+    .solution-card p {
+      color: var(--text-secondary);
+      margin-bottom: 15px;
+      font-size: 0.9rem;
+    }
+    
+    .solution-btn {
+      background: var(--sonyliv-color);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .solution-btn:hover {
+      background: #0090e0;
+      transform: scale(1.05);
     }
     
     /* Loading Animation */
     .loader {
       display: flex;
       justify-content: center;
-      padding: 60px;
+      padding: 40px;
     }
     
     .loader-dots {
       display: flex;
-      gap: 10px;
+      gap: 8px;
     }
     
     .loader-dots div {
-      width: 16px;
-      height: 16px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
       background: var(--primary);
       animation: loader 1.2s infinite ease-in-out both;
@@ -507,54 +492,37 @@
     /* Empty State */
     .empty-state {
       text-align: center;
-      padding: 60px 24px;
+      padding: 40px 20px;
       color: var(--text-secondary);
     }
     
     .empty-state i {
-      font-size: 3.5rem;
-      margin-bottom: 20px;
+      font-size: 3rem;
+      margin-bottom: 15px;
       opacity: 0.5;
     }
     
     .empty-state p {
-      font-size: 1.2rem;
-      margin-bottom: 16px;
+      font-size: 1.1rem;
     }
     
-    .empty-state button {
-      background: var(--gradient-primary);
-      border: none;
-      color: white;
-      padding: 12px 24px;
-      border-radius: 24px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .empty-state button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(225, 6, 0, 0.4);
-    }
-    
-    /* Notification Toast */
+    /* Toast notification */
     .toast {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
+      bottom: 20px;
+      right: 20px;
       background: var(--success);
       color: white;
-      padding: 16px 24px;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 200, 83, 0.3);
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       z-index: 1000;
       transform: translateY(100px);
       opacity: 0;
-      transition: all 0.5s ease;
+      transition: all 0.3s ease;
     }
     
     .toast.show {
@@ -563,52 +531,31 @@
     }
     
     /* Responsive Design */
-    @media (max-width: 900px) {
-      .matches {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      }
-    }
-    
     @media (max-width: 768px) {
+      .matches {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+      
       header {
-        padding: 0 20px;
+        padding: 0 15px;
       }
       
       .search-container {
-        width: 240px;
+        width: 200px;
       }
       
       .logo {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
       }
       
-      .logo-icon {
-        font-size: 1.6rem;
-      }
-      
-      .society-header {
-        font-size: 1.5rem;
-        padding: 10px 0;
-      }
-      
-      .telegram-banner {
-        font-size: 0.9rem;
-        padding: 10px 16px;
-      }
-      
-      .tabs button {
-        padding: 16px 20px;
-        font-size: 0.95rem;
-      }
-      
-      .container {
-        padding: 20px;
+      .sonyliv-solutions {
+        grid-template-columns: 1fr;
       }
     }
     
     @media (max-width: 576px) {
       .tabs button {
-        padding: 14px 16px;
+        padding: 12px 15px;
         font-size: 0.9rem;
       }
       
@@ -617,67 +564,32 @@
       }
       
       .container {
-        padding: 16px;
+        padding: 15px;
       }
       
       .matches {
         grid-template-columns: 1fr;
-        gap: 20px;
       }
       
       .filters {
         justify-content: flex-start;
-        padding: 0 16px;
+        padding: 0 15px;
         overflow-x: auto;
         white-space: nowrap;
-        padding-bottom: 8px;
-        scrollbar-width: none;
+        padding-bottom: 5px;
       }
       
-      .filters::-webkit-scrollbar {
-        display: none;
-      }
-      
-      .society-header {
-        font-size: 1.3rem;
-      }
-      
-      .telegram-banner {
-        font-size: 0.85rem;
+      .event-tabs {
         flex-direction: column;
-        gap: 8px;
-        text-align: center;
-      }
-      
-      .card-thumb {
-        height: 180px;
-      }
-      
-      .section-title {
-        font-size: 1.4rem;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Society Header -->
-  <div class="society-header">
-    Sports Society
-  </div>
-  
-  <!-- Telegram Banner -->
-  <div class="telegram-banner">
-    <span>Join our Telegram channel for live updates</span>
-    <a href="https://t.me/sportssociety" target="_blank">
-      <i class="fab fa-telegram"></i>
-      @sportssociety
-    </a>
-  </div>
-
   <header>
     <div class="logo">
       <i class="fas fa-play-circle logo-icon"></i>
-      <span>Web Player</span>
+      <span>Sports Web Player</span>
     </div>
     <div class="search-container">
       <i class="fas fa-search"></i>
@@ -708,29 +620,18 @@
   </div>
 
   <div class="container">
-    <!-- Live Matches Section -->
-    <h2 class="section-title" id="live-section-title">
-      <i class="fas fa-circle" style="color: var(--live-indicator);"></i>
-      Live Matches
-    </h2>
-    
-    <div id="live-matches" class="matches">
-      <div class="loader">
-        <div class="loader-dots">
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-      </div>
+    <div class="event-tabs">
+      <div class="event-tab active" data-event-type="live">Live Events</div>
+      <div class="event-tab" data-event-type="upcoming">Upcoming Events</div>
+      <div class="event-tab" data-event-type="completed">Completed Events</div>
     </div>
-
-    <!-- Upcoming Matches Section -->
-    <h2 class="section-title" id="upcoming-section-title">
-      <i class="far fa-clock" style="color: var(--upcoming-indicator);"></i>
-      Upcoming Matches
+    
+    <h2 class="section-title">
+      <i class="fas fa-volleyball-ball"></i>
+      <span id="section-title">Live Matches</span>
     </h2>
     
-    <div id="upcoming-matches" class="matches">
+    <div id="matches" class="matches">
       <div class="loader">
         <div class="loader-dots">
           <div></div>
@@ -758,9 +659,9 @@
     </div>
   </div>
 
-  <div class="toast" id="refresh-toast">
-    <i class="fas fa-sync-alt"></i>
-    <span>Content refreshed successfully</span>
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toast-message">Content loaded successfully</span>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -770,24 +671,23 @@
     const API_SONYLIV = "https://raw.githubusercontent.com/drmlive/sliv-live-events/refs/heads/main/sonyliv.json";
 
     // Get DOM elements
-    const liveMatchesDiv = document.getElementById("live-matches");
-    const upcomingMatchesDiv = document.getElementById("upcoming-matches");
+    const matchesDiv = document.getElementById("matches");
     const playerSection = document.getElementById("player");
     const searchInput = document.getElementById("search-input");
     const tabFanCode = document.getElementById("tab-fancode");
     const tabSonyLIV = document.getElementById("tab-sonyliv");
     const filterButtons = document.querySelectorAll(".filters button");
-    const liveSectionTitle = document.getElementById("live-section-title");
-    const upcomingSectionTitle = document.getElementById("upcoming-section-title");
-    const refreshToast = document.getElementById("refresh-toast");
+    const sectionTitle = document.getElementById("section-title");
+    const eventTabs = document.querySelectorAll(".event-tab");
+    const toast = document.getElementById("toast");
 
     // Initialize variables
     let fancodeMatches = [];
     let sonylivMatches = [];
     let currentSource = "fancode";
     let currentFilter = "all";
-    let filteredLiveMatches = [];
-    let filteredUpcomingMatches = [];
+    let currentEventType = "live";
+    let filteredMatches = [];
     let videoPlayer = null;
     let hls = null;
 
@@ -813,6 +713,17 @@
         });
       });
       
+      // Event type tabs
+      eventTabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+          currentEventType = tab.dataset.eventType;
+          document.querySelectorAll(".event-tab").forEach(t => t.classList.remove("active"));
+          tab.classList.add("active");
+          sectionTitle.textContent = tab.textContent;
+          applyFilters();
+        });
+      });
+      
       // Search functionality
       searchInput.addEventListener("input", applyFilters);
       
@@ -825,34 +736,12 @@
           closePlayer();
         }
       });
-      
-      // Pull-to-refresh simulation (on mobile)
-      let touchStartY = 0;
-      window.addEventListener('touchstart', e => {
-        touchStartY = e.touches[0].clientY;
-      }, {passive: true});
-      
-      window.addEventListener('touchend', e => {
-        const touchEndY = e.changedTouches[0].clientY;
-        // If user swiped down from top of screen
-        if (touchStartY - touchEndY > 100 && window.scrollY === 0) {
-          loadMatches();
-          showToast();
-        }
-      }, {passive: true});
-    }
-
-    // Show notification toast
-    function showToast() {
-      refreshToast.classList.add('show');
-      setTimeout(() => {
-        refreshToast.classList.remove('show');
-      }, 3000);
     }
 
     // Switch between FanCode and SonyLIV sources
     function switchSource(source) {
       currentSource = source;
+      sectionTitle.textContent = `${currentEventType === "live" ? "Live" : currentEventType === "upcoming" ? "Upcoming" : "Completed"} ${source === "fancode" ? "FanCode" : "SonyLIV"} Matches`;
       
       // Update active tab
       if (source === "fancode") {
@@ -876,7 +765,11 @@
           const fRes = await fetch(API_FANCODE);
           if (fRes.ok) {
             const fData = await fRes.json();
-            fancodeMatches = (fData.matches || []).map(m => ({ ...m, provider: "FanCode" }));
+            fancodeMatches = (fData.matches || []).map(m => ({ 
+              ...m, 
+              provider: "FanCode",
+              status: m.status || "upcoming"
+            }));
           }
         } catch (e) {
           console.error("Failed to load FanCode data:", e);
@@ -888,12 +781,10 @@
           const sRes = await fetch(API_SONYLIV);
           if (sRes.ok) {
             const sData = await sRes.json();
-            // Fix for SonyLIV: Ensure both live and upcoming events are included
             sonylivMatches = (sData.matches || []).map(m => ({ 
               ...m, 
               provider: "SonyLIV",
-              // Ensure status is properly set for SonyLIV events
-              status: m.status || (m.isLive ? "LIVE" : "UPCOMING")
+              status: m.status || "upcoming"
             }));
           }
         } catch (e) {
@@ -901,6 +792,7 @@
           sonylivMatches = [];
         }
         
+        showToast("Content updated successfully");
         applyFilters();
       } catch (err) {
         showError("Failed to load matches. Please try again later.");
@@ -910,6 +802,15 @@
     // Apply filters and search
     function applyFilters() {
       let data = currentSource === "fancode" ? [...fancodeMatches] : [...sonylivMatches];
+      
+      // Apply event type filter
+      if (currentEventType === "live") {
+        data = data.filter(m => m.status && m.status.toUpperCase() === "LIVE");
+      } else if (currentEventType === "upcoming") {
+        data = data.filter(m => !m.status || m.status.toUpperCase() !== "LIVE");
+      } else if (currentEventType === "completed") {
+        data = data.filter(m => m.status && m.status.toUpperCase() === "COMPLETED");
+      }
       
       // Apply sport filter
       if (currentFilter !== "all") {
@@ -928,94 +829,59 @@
         );
       }
       
-      // Separate live and upcoming matches
-      filteredLiveMatches = data.filter(match => {
-        const isLive = match.status ? match.status.toUpperCase() === "LIVE" : match.isLive;
-        return isLive;
-      });
-      
-      filteredUpcomingMatches = data.filter(match => {
-        const isLive = match.status ? match.status.toUpperCase() === "LIVE" : match.isLive;
-        return !isLive;
-      });
-      
+      filteredMatches = data;
       renderMatches();
     }
 
     // Render matches to the UI
     function renderMatches() {
-      liveMatchesDiv.innerHTML = "";
-      upcomingMatchesDiv.innerHTML = "";
+      matchesDiv.innerHTML = "";
       
-      // Update section titles with count
-      liveSectionTitle.innerHTML = `<i class="fas fa-circle" style="color: var(--live-indicator);"></i> Live Matches ${filteredLiveMatches.length > 0 ? `(${filteredLiveMatches.length})` : ''}`;
-      upcomingSectionTitle.innerHTML = `<i class="far fa-clock" style="color: var(--upcoming-indicator);"></i> Upcoming Matches ${filteredUpcomingMatches.length > 0 ? `(${filteredUpcomingMatches.length})` : ''}`;
-      
-      // Render live matches
-      if (filteredLiveMatches.length === 0) {
-        liveMatchesDiv.innerHTML = `
-          <div class="empty-state">
-            <i class="fas fa-tv"></i>
-            <p>No ${currentFilter === "all" ? "" : currentFilter + " "}live matches available.</p>
-          </div>
-        `;
-      } else {
-        filteredLiveMatches.forEach(match => {
-          renderMatchCard(match, liveMatchesDiv);
-        });
+      if (filteredMatches.length === 0) {
+        showEmptyState();
+        return;
       }
-      
-      // Render upcoming matches
-      if (filteredUpcomingMatches.length === 0) {
-        upcomingMatchesDiv.innerHTML = `
-          <div class="empty-state">
-            <i class="fas fa-clock"></i>
-            <p>No ${currentFilter === "all" ? "" : currentFilter + " "}upcoming matches available.</p>
-          </div>
-        `;
-      } else {
-        filteredUpcomingMatches.forEach(match => {
-          renderMatchCard(match, upcomingMatchesDiv);
-        });
-      }
-    }
 
-    // Render a single match card
-    function renderMatchCard(match, container) {
-      const isLive = match.status ? match.status.toUpperCase() === "LIVE" : match.isLive;
-      const providerClass = match.provider === "FanCode" ? "badge-fancode" : "badge-sonyliv";
-      
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
-        <div class="card-thumb">
-          <img src="${match.src || 'https://via.placeholder.com/300x180/1e1e1e/666666?text=Sports+Event'}" 
-               alt="${match.match_name || match.event_name || 'Sports Event'}"
-               onerror="this.src='https://via.placeholder.com/300x180/1e1e1e/666666?text=Sports+Event'">
-          <div class="card-badge ${isLive ? 'badge-live' : 'badge-upcoming'}">
-            ${isLive ? '<i class="fas fa-circle"></i> LIVE' : 'UPCOMING'}
+      filteredMatches.forEach(match => {
+        const isLive = match.status && match.status.toUpperCase() === "LIVE";
+        const isCompleted = match.status && match.status.toUpperCase() === "COMPLETED";
+        const providerClass = match.provider === "FanCode" ? "badge-fancode" : "badge-sonyliv";
+        const statusBadge = isLive ? 'badge-live' : (isCompleted ? 'badge-completed' : 'badge-upcoming');
+        const statusText = isLive ? 'LIVE' : (isCompleted ? 'COMPLETED' : 'UPCOMING');
+        
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="card-thumb">
+            <img src="${match.src || 'https://via.placeholder.com/300x180/1e1e1e/666666?text=Sports+Event'}" 
+                 alt="${match.match_name || match.event_name || 'Sports Event'}"
+                 onerror="this.src='https://via.placeholder.com/300x180/1e1e1e/666666?text=Sports+Event'">
+            <div class="card-badge ${statusBadge}">
+              ${isLive ? '<i class="fas fa-circle"></i> ' : ''}${statusText}
+            </div>
+            <div class="provider-badge ${providerClass}">
+              ${match.provider}
+            </div>
           </div>
-          <div class="provider-badge ${providerClass}">
-            ${match.provider}
+          <div class="card-content">
+            <h3 class="card-title">${match.match_name || match.event_name || "Untitled Event"}</h3>
+            <p class="card-details">${match.event_category || "Sports"} • ${match.event_name || ""}</p>
+            ${match.team_1 && match.team_2 ? `
+            <div class="card-teams">
+              <span>${match.team_1}</span>
+              <span>VS</span>
+              <span>${match.team_2}</span>
+            </div>
+            ` : ''}
+            ${match.score ? `<div class="card-score">${match.score}</div>` : ''}
+            <p class="card-time">
+              <i class="far fa-clock"></i> ${match.startTime || "Time TBD"}
+            </p>
           </div>
-        </div>
-        <div class="card-content">
-          <h3 class="card-title">${match.match_name || match.event_name || "Untitled Event"}</h3>
-          <p class="card-details">${match.event_category || "Sports"} • ${match.event_name || ""}</p>
-          ${match.team_1 && match.team_2 ? `
-          <div class="card-teams">
-            <span>${match.team_1}</span>
-            <span>VS</span>
-            <span>${match.team_2}</span>
-          </div>
-          ` : ''}
-          <p class="card-time">
-            <i class="far fa-clock"></i> ${match.startTime || "Time TBD"}
-          </p>
-        </div>
-      `;
-      card.addEventListener("click", () => playMatch(match));
-      container.appendChild(card);
+        `;
+        card.addEventListener("click", () => playMatch(match));
+        matchesDiv.appendChild(card);
+      });
     }
 
     // Play a selected match
@@ -1037,8 +903,8 @@
 
       const streamUrl = match.adfree_url || match.dai_url || null;
       
-      if (!streamUrl && match.provider === "SonyLIV") {
-        showSonyLIVMessage();
+      if (match.provider === "SonyLIV") {
+        showSonyLIVSolutions(match);
         return;
       }
 
@@ -1073,19 +939,46 @@
       }
     }
 
-    // Show SonyLIV message when content is not directly accessible
-    function showSonyLIVMessage() {
+    // Show SonyLIV solutions when content is not directly accessible
+    function showSonyLIVSolutions(match) {
       playerSection.innerHTML = `
         <div class="player-header">
-          <h2 class="player-title">SonyLIV Content</h2>
+          <h2 class="player-title">${match.match_name || match.event_name || "SonyLIV Event"}</h2>
           <button class="close-player">
             <i class="fas fa-times"></i>
           </button>
         </div>
-        <div style="text-align: center; padding: 40px; max-width: 500px;">
-          <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #00a8ff; margin-bottom: 20px;"></i>
-          <h3>SonyLIV streams require official app/website access</h3>
-          <p>Please use the official SonyLIV app or website to watch this content.</p>
+        <div style="text-align: center; padding: 20px; max-width: 800px;">
+          <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: var(--sonyliv-color); margin-bottom: 20px;"></i>
+          <h3>SonyLIV Streaming Solutions</h3>
+          <p style="margin-bottom: 30px;">SonyLIV content requires official access. Here are some ways to watch this event:</p>
+          
+          <div class="sonyliv-solutions">
+            <div class="solution-card">
+              <i class="fas fa-mobile-alt"></i>
+              <h3>Official App</h3>
+              <p>Watch directly on the SonyLIV mobile app with a subscription</p>
+              <button class="solution-btn" onclick="window.open('https://www.sonyliv.com/', '_blank')">Open SonyLIV</button>
+            </div>
+            
+            <div class="solution-card">
+              <i class="fas fa-desktop"></i>
+              <h3>Web Browser</h3>
+              <p>Access through the official SonyLIV website with your account</p>
+              <button class="solution-btn" onclick="window.open('https://www.sonyliv.com/', '_blank')">Visit Website</button>
+            </div>
+            
+            <div class="solution-card">
+              <i class="fas fa-tv"></i>
+              <h3>Smart TV</h3>
+              <p>Use the SonyLIV app on your Smart TV or streaming device</p>
+              <button class="solution-btn" onclick="window.open('https://www.sonyliv.com/help', '_blank')">Setup Guide</button>
+            </div>
+          </div>
+          
+          <p style="margin-top: 30px; font-size: 0.9rem; color: var(--text-secondary);">
+            Note: Some events may require a premium subscription or geographic availability.
+          </p>
         </div>
       `;
       
@@ -1135,7 +1028,7 @@
 
     // Show loading indicator
     function showLoader() {
-      liveMatchesDiv.innerHTML = `
+      matchesDiv.innerHTML = `
         <div class="loader">
           <div class="loader-dots">
             <div></div>
@@ -1144,45 +1037,44 @@
           </div>
         </div>
       `;
-      
-      upcomingMatchesDiv.innerHTML = `
-        <div class="loader">
-          <div class="loader-dots">
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
+    }
+
+    // Show empty state message
+    function showEmptyState() {
+      matchesDiv.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-tv"></i>
+          <p>No ${currentEventType} ${currentFilter === "all" ? "" : currentFilter + " "}matches available.</p>
         </div>
       `;
     }
 
     // Show error message
     function showError(message) {
-      liveMatchesDiv.innerHTML = `
+      matchesDiv.innerHTML = `
         <div class="empty-state">
           <i class="fas fa-exclamation-triangle"></i>
           <p>${message}</p>
-          <button onclick="loadMatches()">Try Again</button>
         </div>
       `;
+    }
+    
+    // Show toast notification
+    function showToast(message) {
+      const toastMessage = document.getElementById("toast-message");
+      toastMessage.textContent = message;
+      toast.classList.add("show");
       
-      upcomingMatchesDiv.innerHTML = `
-        <div class="empty-state">
-          <i class="fas fa-exclamation-triangle"></i>
-          <p>${message}</p>
-          <button onclick="loadMatches()">Try Again</button>
-        </div>
-      `;
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
     }
 
     // Initialize the application when the DOM is fully loaded
     document.addEventListener("DOMContentLoaded", initApp);
     
     // Auto-refresh every 60 seconds
-    setInterval(() => {
-      loadMatches();
-      showToast();
-    }, 60000);
+    setInterval(loadMatches, 60000);
   </script>
 </body>
 </html>
