@@ -23,7 +23,6 @@
       --tab-height: 50px;
       --border-radius: 12px;
       --telegram-color: #0088cc;
-      --success: #4caf50;
     }
     
     * {
@@ -38,6 +37,45 @@
       color: var(--text-primary);
       line-height: 1.6;
       overflow-x: hidden;
+    }
+    
+    /* Society Header */
+    .society-header {
+      background: linear-gradient(135deg, #000000, #2a2a2a);
+      text-align: center;
+      padding: 8px 0;
+      font-size: 1.8rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+      border-bottom: 1px solid #333;
+    }
+    
+    /* Telegram Banner */
+    .telegram-banner {
+      background: linear-gradient(135deg, var(--telegram-color), #005580);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 0.95rem;
+    }
+    
+    .telegram-banner a {
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .telegram-banner a:hover {
+      background: rgba(0, 0, 0, 0.4);
+      transform: translateY(-2px);
     }
     
     /* Header Styles */
@@ -208,7 +246,6 @@
       cursor: pointer;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      position: relative;
     }
     
     .card:hover {
@@ -256,11 +293,6 @@
     
     .badge-upcoming {
       background: var(--upcoming-indicator);
-      color: white;
-    }
-    
-    .badge-completed {
-      background: var(--success);
       color: white;
     }
     
@@ -315,39 +347,6 @@
       display: flex;
       align-items: center;
       gap: 5px;
-    }
-    
-    .card-score {
-      font-size: 0.9rem;
-      color: var(--text-primary);
-      margin-top: 5px;
-      font-weight: 500;
-    }
-    
-    /* Event type tabs */
-    .event-tabs {
-      display: flex;
-      margin: 20px 0;
-      background: #1a1a1a;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    
-    .event-tab {
-      flex: 1;
-      text-align: center;
-      padding: 12px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-weight: 500;
-    }
-    
-    .event-tab.active {
-      background: var(--primary);
-    }
-    
-    .event-tab:hover:not(.active) {
-      background: #2a2a2a;
     }
     
     /* Player Section */
@@ -452,34 +451,6 @@
       font-size: 1.1rem;
     }
     
-    /* Toast notification */
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: var(--success);
-      color: white;
-      padding: 12px 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      z-index: 1000;
-      transform: translateY(100px);
-      opacity: 0;
-      transition: all 0.3s ease;
-    }
-    
-    .toast.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    
-    .toast.error {
-      background: var(--primary);
-    }
-    
     /* Responsive Design */
     @media (max-width: 768px) {
       .matches {
@@ -496,6 +467,16 @@
       
       .logo {
         font-size: 1.2rem;
+      }
+      
+      .society-header {
+        font-size: 1.4rem;
+        padding: 6px 0;
+      }
+      
+      .telegram-banner {
+        font-size: 0.85rem;
+        padding: 8px 15px;
       }
     }
     
@@ -525,17 +506,37 @@
         padding-bottom: 5px;
       }
       
-      .event-tabs {
+      .society-header {
+        font-size: 1.2rem;
+      }
+      
+      .telegram-banner {
+        font-size: 0.8rem;
         flex-direction: column;
+        gap: 5px;
+        text-align: center;
       }
     }
   </style>
 </head>
 <body>
+  <!-- Society Header -->
+  <div class="society-header">
+   𝒯𝑒𝒸𝒽 𝒞𝑜𝒹𝑒𝓇
+  </div>
+  <!-- Telegram Banner -->
+  <!-- <div class="telegram-banner">
+    <span>Join our Telegram channel for updates:</span>
+    <a href="https://t.me/syndicatx" target="_blank">
+      <i class="fab fa-telegram-plane"></i>
+      t.me/syndicatx
+    </a>
+  </div> -->
+
   <header>
     <div class="logo">
       <i class="fas fa-play-circle logo-icon"></i>
-      <span>Sports Web Player</span>
+      <span> 𝒯𝑒𝒸𝒽 𝒞𝑜𝒹𝑒𝓇 Web Player</span>
     </div>
     <div class="search-container">
       <i class="fas fa-search"></i>
@@ -566,12 +567,6 @@
   </div>
 
   <div class="container">
-    <div class="event-tabs">
-      <div class="event-tab active" data-event-type="live">Live Events</div>
-      <div class="event-tab" data-event-type="upcoming">Upcoming Events</div>
-      <div class="event-tab" data-event-type="completed">Completed Events</div>
-    </div>
-    
     <h2 class="section-title">
       <i class="fas fa-volleyball-ball"></i>
       <span id="section-title">Live Matches</span>
@@ -605,20 +600,11 @@
     </div>
   </div>
 
-  <div class="toast" id="toast">
-    <i class="fas fa-check-circle" id="toast-icon"></i>
-    <span id="toast-message">Content loaded successfully</span>
-  </div>
-
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script>
     // Define API endpoints
     const API_FANCODE = "https://raw.githubusercontent.com/drmlive/fancode-live-events/main/fancode.json";
     const API_SONYLIV = "https://raw.githubusercontent.com/drmlive/sliv-live-events/refs/heads/main/sonyliv.json";
-    
-    // Proxy server endpoint (this would be your Vercel serverless function)
-    // For demo purposes, we'll use a simulated proxy approach
-    const PROXY_URL = "https://corsproxy.io/?";
 
     // Get DOM elements
     const matchesDiv = document.getElementById("matches");
@@ -628,17 +614,12 @@
     const tabSonyLIV = document.getElementById("tab-sonyliv");
     const filterButtons = document.querySelectorAll(".filters button");
     const sectionTitle = document.getElementById("section-title");
-    const eventTabs = document.querySelectorAll(".event-tab");
-    const toast = document.getElementById("toast");
-    const toastIcon = document.getElementById("toast-icon");
-    const toastMessage = document.getElementById("toast-message");
 
     // Initialize variables
     let fancodeMatches = [];
     let sonylivMatches = [];
     let currentSource = "fancode";
     let currentFilter = "all";
-    let currentEventType = "live";
     let filteredMatches = [];
     let videoPlayer = null;
     let hls = null;
@@ -665,17 +646,6 @@
         });
       });
       
-      // Event type tabs
-      eventTabs.forEach(tab => {
-        tab.addEventListener("click", () => {
-          currentEventType = tab.dataset.eventType;
-          document.querySelectorAll(".event-tab").forEach(t => t.classList.remove("active"));
-          tab.classList.add("active");
-          sectionTitle.textContent = tab.textContent;
-          applyFilters();
-        });
-      });
-      
       // Search functionality
       searchInput.addEventListener("input", applyFilters);
       
@@ -693,7 +663,7 @@
     // Switch between FanCode and SonyLIV sources
     function switchSource(source) {
       currentSource = source;
-      sectionTitle.textContent = `${currentEventType === "live" ? "Live" : currentEventType === "upcoming" ? "Upcoming" : "Completed"} ${source === "fancode" ? "FanCode" : "SonyLIV"} Matches`;
+      sectionTitle.textContent = source === "fancode" ? "FanCode Matches" : "SonyLIV Matches";
       
       // Update active tab
       if (source === "fancode") {
@@ -717,11 +687,7 @@
           const fRes = await fetch(API_FANCODE);
           if (fRes.ok) {
             const fData = await fRes.json();
-            fancodeMatches = (fData.matches || []).map(m => ({ 
-              ...m, 
-              provider: "FanCode",
-              status: m.status || "upcoming"
-            }));
+            fancodeMatches = (fData.matches || []).map(m => ({ ...m, provider: "FanCode" }));
           }
         } catch (e) {
           console.error("Failed to load FanCode data:", e);
@@ -733,18 +699,13 @@
           const sRes = await fetch(API_SONYLIV);
           if (sRes.ok) {
             const sData = await sRes.json();
-            sonylivMatches = (sData.matches || []).map(m => ({ 
-              ...m, 
-              provider: "SonyLIV",
-              status: m.status || "upcoming"
-            }));
+            sonylivMatches = (sData.matches || []).map(m => ({ ...m, provider: "SonyLIV" }));
           }
         } catch (e) {
           console.error("Failed to load SonyLIV data:", e);
           sonylivMatches = [];
         }
         
-        showToast("Content updated successfully", "success");
         applyFilters();
       } catch (err) {
         showError("Failed to load matches. Please try again later.");
@@ -754,15 +715,6 @@
     // Apply filters and search
     function applyFilters() {
       let data = currentSource === "fancode" ? [...fancodeMatches] : [...sonylivMatches];
-      
-      // Apply event type filter
-      if (currentEventType === "live") {
-        data = data.filter(m => m.status && m.status.toUpperCase() === "LIVE");
-      } else if (currentEventType === "upcoming") {
-        data = data.filter(m => !m.status || m.status.toUpperCase() !== "LIVE");
-      } else if (currentEventType === "completed") {
-        data = data.filter(m => m.status && m.status.toUpperCase() === "COMPLETED");
-      }
       
       // Apply sport filter
       if (currentFilter !== "all") {
@@ -796,10 +748,7 @@
 
       filteredMatches.forEach(match => {
         const isLive = match.status && match.status.toUpperCase() === "LIVE";
-        const isCompleted = match.status && match.status.toUpperCase() === "COMPLETED";
         const providerClass = match.provider === "FanCode" ? "badge-fancode" : "badge-sonyliv";
-        const statusBadge = isLive ? 'badge-live' : (isCompleted ? 'badge-completed' : 'badge-upcoming');
-        const statusText = isLive ? 'LIVE' : (isCompleted ? 'COMPLETED' : 'UPCOMING');
         
         const card = document.createElement("div");
         card.className = "card";
@@ -808,8 +757,8 @@
             <img src="${match.src || 'https://via.placeholder.com/300x180/1e1e1e/666666?text=Sports+Event'}" 
                  alt="${match.match_name || match.event_name || 'Sports Event'}"
                  onerror="this.src='https://via.placeholder.com/300x180/1e1e1e/666666?text=Sports+Event'">
-            <div class="card-badge ${statusBadge}">
-              ${isLive ? '<i class="fas fa-circle"></i> ' : ''}${statusText}
+            <div class="card-badge ${isLive ? 'badge-live' : 'badge-upcoming'}">
+              ${isLive ? '<i class="fas fa-circle"></i> LIVE' : 'UPCOMING'}
             </div>
             <div class="provider-badge ${providerClass}">
               ${match.provider}
@@ -825,7 +774,6 @@
               <span>${match.team_2}</span>
             </div>
             ` : ''}
-            ${match.score ? `<div class="card-score">${match.score}</div>` : ''}
             <p class="card-time">
               <i class="far fa-clock"></i> ${match.startTime || "Time TBD"}
             </p>
@@ -837,7 +785,7 @@
     }
 
     // Play a selected match
-    async function playMatch(match) {
+    function playMatch(match) {
       const matchTitleEl = document.getElementById("match-title");
       const matchInfoEl = document.getElementById("match-info");
       const videoEl = document.getElementById("live-player");
@@ -853,98 +801,21 @@
       playerSection.style.display = "flex";
       document.body.style.overflow = "hidden";
 
-      const streamUrl = match.adfree_url || match.dai_url || match.src || null;
+      const streamUrl = match.adfree_url || match.dai_url || null;
       
-      if (!streamUrl) {
-        showToast("Stream URL not available for this event", "error");
+      if (!streamUrl && match.provider === "SonyLIV") {
+        showSonyLIVMessage();
         return;
       }
 
-      // Use proxy for HLS streams to avoid CORS and 403 issues
-      try {
-        showToast("Loading stream...", "success");
-        await setupVideoPlayer(streamUrl, videoEl);
-      } catch (error) {
-        console.error("Error setting up video player:", error);
-        showToast("Failed to load stream. Trying alternative method...", "error");
-        
-        // Fallback: Try to play directly (may work for some streams)
-        try {
-          await setupVideoPlayerDirect(streamUrl, videoEl);
-        } catch (fallbackError) {
-          console.error("Fallback also failed:", fallbackError);
-          showToast("This stream cannot be played directly. Please use official apps.", "error");
-        }
+      if (streamUrl) {
+        setupVideoPlayer(streamUrl, videoEl);
       }
     }
 
-    // Set up the video player with HLS.js using proxy
-    async function setupVideoPlayer(streamUrl, videoEl) {
+    // Set up the video player with HLS.js
+    function setupVideoPlayer(streamUrl, videoEl) {
       // Clean up any existing Hls instance
-      if (hls) {
-        hls.destroy();
-      }
-      
-      // For demo purposes, we'll use a CORS proxy
-      // In a real implementation, you would use your own proxy server
-      const proxyStreamUrl = `${PROXY_URL}${encodeURIComponent(streamUrl)}`;
-      
-      if (Hls.isSupported()) {
-        hls = new Hls({
-          maxBufferLength: 30,
-          maxMaxBufferLength: 60,
-          enableWorker: true,
-          xhrSetup: function(xhr) {
-            // Set headers to mimic a browser request
-            xhr.setRequestHeader('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
-            xhr.setRequestHeader('Referer', 'https://www.fancode.com/');
-            xhr.setRequestHeader('Origin', 'https://www.fancode.com');
-          }
-        });
-        
-        hls.loadSource(proxyStreamUrl);
-        hls.attachMedia(videoEl);
-        
-        return new Promise((resolve, reject) => {
-          hls.on(Hls.Events.MANIFEST_PARSED, () => {
-            videoEl.play().catch(e => {
-              console.log("Autoplay prevented:", e);
-              // User interaction might be required for autoplay
-              videoEl.controls = true;
-            });
-            resolve();
-          });
-          
-          hls.on(Hls.Events.ERROR, (event, data) => {
-            if (data.fatal) {
-              reject(new Error("HLS error: " + data.type));
-            }
-          });
-        });
-      } else if (videoEl.canPlayType("application/vnd.apple.mpegurl")) {
-        // For Safari and other browsers that support native HLS
-        videoEl.src = proxyStreamUrl;
-        
-        return new Promise((resolve, reject) => {
-          videoEl.addEventListener('loadedmetadata', () => {
-            videoEl.play().catch(e => {
-              console.log("Autoplay prevented:", e);
-              videoEl.controls = true;
-            });
-            resolve();
-          });
-          
-          videoEl.addEventListener('error', () => {
-            reject(new Error("Video element error"));
-          });
-        });
-      } else {
-        throw new Error("HLS not supported in this browser");
-      }
-    }
-    
-    // Fallback method for direct stream playback (without proxy)
-    async function setupVideoPlayerDirect(streamUrl, videoEl) {
       if (hls) {
         hls.destroy();
       }
@@ -955,44 +826,36 @@
           maxMaxBufferLength: 60,
           enableWorker: true
         });
-        
         hls.loadSource(streamUrl);
         hls.attachMedia(videoEl);
-        
-        return new Promise((resolve, reject) => {
-          hls.on(Hls.Events.MANIFEST_PARSED, () => {
-            videoEl.play().catch(e => {
-              console.log("Autoplay prevented:", e);
-              videoEl.controls = true;
-            });
-            resolve();
-          });
-          
-          hls.on(Hls.Events.ERROR, (event, data) => {
-            if (data.fatal) {
-              reject(new Error("HLS error: " + data.type));
-            }
-          });
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          videoEl.play().catch(e => console.log("Autoplay prevented:", e));
         });
       } else if (videoEl.canPlayType("application/vnd.apple.mpegurl")) {
         videoEl.src = streamUrl;
-        
-        return new Promise((resolve, reject) => {
-          videoEl.addEventListener('loadedmetadata', () => {
-            videoEl.play().catch(e => {
-              console.log("Autoplay prevented:", e);
-              videoEl.controls = true;
-            });
-            resolve();
-          });
-          
-          videoEl.addEventListener('error', () => {
-            reject(new Error("Video element error"));
-          });
+        videoEl.addEventListener("loadedmetadata", () => {
+          videoEl.play().catch(e => console.log("Autoplay prevented:", e));
         });
-      } else {
-        throw new Error("HLS not supported in this browser");
       }
+    }
+
+    // Show SonyLIV message when content is not directly accessible
+    function showSonyLIVMessage() {
+      playerSection.innerHTML = `
+        <div class="player-header">
+          <h2 class="player-title">SonyLIV Content</h2>
+          <button class="close-player">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div style="text-align: center; padding: 40px; max-width: 500px;">
+          <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #00a8ff; margin-bottom: 20px;"></i>
+          <h3>SonyLIV streams require official app/website access</h3>
+          <p>Please use the official SonyLIV app or website to watch this content.</p>
+        </div>
+      `;
+      
+      document.querySelector(".close-player").addEventListener("click", closePlayer);
     }
 
     // Close the player
@@ -1013,6 +876,27 @@
       // Hide player
       playerSection.style.display = "none";
       document.body.style.overflow = "auto";
+      
+      // Reset player to initial state if it was modified
+      if (!document.getElementById("match-title")) {
+        playerSection.innerHTML = `
+          <div class="player-header">
+            <h2 class="player-title" id="match-title"></h2>
+            <button class="close-player">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="video-container">
+            <video id="live-player" controls autoplay></video>
+          </div>
+          <div class="player-info">
+            <p id="match-info"></p>
+          </div>
+        `;
+        
+        // Reattach event listener to the new close button
+        document.querySelector(".close-player").addEventListener("click", closePlayer);
+      }
     }
 
     // Show loading indicator
@@ -1033,7 +917,7 @@
       matchesDiv.innerHTML = `
         <div class="empty-state">
           <i class="fas fa-tv"></i>
-          <p>No ${currentEventType} ${currentFilter === "all" ? "" : currentFilter + " "}matches available.</p>
+          <p>No ${currentFilter === "all" ? "" : currentFilter + " "}matches available.</p>
         </div>
       `;
     }
@@ -1046,25 +930,6 @@
           <p>${message}</p>
         </div>
       `;
-    }
-    
-    // Show toast notification
-    function showToast(message, type = "success") {
-      toastMessage.textContent = message;
-      
-      if (type === "error") {
-        toast.classList.add("error");
-        toastIcon.className = "fas fa-exclamation-circle";
-      } else {
-        toast.classList.remove("error");
-        toastIcon.className = "fas fa-check-circle";
-      }
-      
-      toast.classList.add("show");
-      
-      setTimeout(() => {
-        toast.classList.remove("show");
-      }, 3000);
     }
 
     // Initialize the application when the DOM is fully loaded
